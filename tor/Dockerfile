@@ -5,7 +5,7 @@ FROM alpine:3.19
 
 # Get tor and copy configuration
 RUN apk add --no-cache tor
-COPY torrc /etc/tor/torrc
+COPY ./tools/torrc /etc/tor/torrc
 
 # Start process
 CMD ["tor"]
