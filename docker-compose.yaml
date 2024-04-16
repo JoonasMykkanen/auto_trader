@@ -2,8 +2,10 @@ version: '3'
 
 services:
 
+  # ---------- FASTAPI BACKEND ----------
   backend:
     build: ./backend
+    restart: always
     ports:
       - 8080:8080
     volumes:
@@ -11,12 +13,15 @@ services:
     depends_on:
       - tor
 
+  # ---------- TOR PROXY ----------
   tor:
     build: ./tor
+    restart: always
     ports:
       - 9050:9050
       - 9051:9051
 
+  # ---------- DATABASE ----------
   postgres:
     image: postgres
     restart: always
@@ -29,6 +34,7 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
   
+  # ---------- DB TOOLS ----------
   pg-admin:
     image: dpage/pgadmin4:latest
     restart: always

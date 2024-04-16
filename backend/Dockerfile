@@ -1,6 +1,7 @@
-# Base image --> as small as possible
+# Base image
 FROM python:3.12-slim
 
+# Updates and setup
 RUN apt-get -y update && apt-get -y upgrade
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -10,11 +11,11 @@ WORKDIR /code
 # Development dependencies
 RUN apt-get -y install netcat-openbsd
 
-# Install dependencies
+# Install application dependencies
 COPY ./requirements.txt requirements.txt
 RUN pip3 install --no-cache-dir --upgrade -r requirements.txt
 
-# Handle the actual code
+# Import app itself
 COPY ./app app
 
 # Start the app
