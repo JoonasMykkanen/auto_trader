@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+
+  backend:
+    build: ./backend
+    ports:
+      - 8080:8080
+    volumes:
+      - ./backend/app:/code/app
+    depends_on:
+      - tor
+
+  tor:
+    build: ./tor
+    ports:
+      - 9050:9050
+      - 9051:9051
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=test_db
+    ports:
+      - 5432:5432
+    volumes:
+      - data:/var/lib/postgresql/data
+  
+  pg-admin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - 5050:80
+
+
+
+volumes:
+  data:
