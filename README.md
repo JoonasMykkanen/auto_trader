@@ -1,2 +1,2 @@
-# Automated trading platform with a modern twist
+# Automated trading platform with a semi social & modern twist
 
