@@ -1,24 +1,23 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    main.py                                            :+:      :+:    :+:    #
+#    ticker.py                                          :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/04/16 09:32:22 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/21 06:30:03 by jmykkane         ###   ########.fr        #
+#    Created: 2024/04/20 06:16:16 by jmykkane          #+#    #+#              #
+#    Updated: 2024/04/20 06:57:09 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-from starlette.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
+# Fetches ticker historical data
 
-app = FastAPI()
+from .tor import tor_request
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+def fetch_ticker_candles():
+    """ Will request ticker data for given time range from Yahoo Finance website (not api) \n\n Parameters: None \n\n Returns: None"""
+    try:
+        pass
+    except Exception as error:
+        logger
+    

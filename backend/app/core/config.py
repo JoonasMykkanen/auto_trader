@@ -1,24 +1,13 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    main.py                                            :+:      :+:    :+:    #
+#    config.py                                          :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/04/16 09:32:22 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/21 06:30:03 by jmykkane         ###   ########.fr        #
+#    Created: 2024/04/20 05:56:00 by jmykkane          #+#    #+#              #
+#    Updated: 2024/04/20 05:56:11 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-from starlette.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
-
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Handling all environment and configuration values

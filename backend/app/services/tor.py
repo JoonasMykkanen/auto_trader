@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 15:45:27 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/16 16:17:02 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/20 06:22:21 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ def generate_agent():
 
 
 def renew_ip():
+	""" Sends signal to local tor binary to renew ip and identity \n\n Parameters: None \n\n Returns: None"""
 	ip = socket.gethostbyname('tor')
 	with Controller.from_port(address=ip, port=9051) as controller:
 		controller.authenticate(password="password")
@@ -44,6 +45,7 @@ def renew_ip():
 
 
 def tor_request( url: str ):
+	""" Makes a request trough tor proxy \n\n Parameters: None \n\n Returns: (response) object"""
 	session = requests.session()
 	session.proxies = { 'http': 'socks5h://tor:9050', 'https': 'socks5h://tor:9050' }
 	headers = { 'User-Agent': f'{generate_agent()}' }
