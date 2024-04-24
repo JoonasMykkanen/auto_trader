@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:52:25 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 09:12:48 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/24 11:51:40 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,10 +31,12 @@ from ..core.models import Ticker
 from ..core.database import session
 from ..core.config import logger
 
+from .crud import get_daily_candle_latest
 from .crud import get_ticker_id
 from .tor import tor_request
 
 from datetime import datetime
+from datetime import timedelta
 
 
 
@@ -60,21 +62,23 @@ def create_candle(data: list[str], ticker_id: int):
                 volume = int(data[6]),
                 ticker_id = ticker_id
             )
-    
 
 
 def fetch_daily(ticker: str, mode: int):
-    """ Parameters: \n\n - ticker: 'AAPL' \n\n - mode: 1 == daily OR 2 == weekly """
-    # TODO: add logic to fetch only dates that are not in the database already
+    """ Gets daily candlestick data for given ticker from 1981 or latest saved in database up until datetime.now() \n\n Parameters: \n\n - ticker: 'AAPL' \n\n - mode: 1 == daily OR 2 == weekly """
     try:
-        url = build_url(ticker, datetime(1981, 1, 1), datetime.now(), '1d')
+        start_date = get_daily_candle_latest() + timedelta(days=1)
+        url = build_url(ticker, start_date, datetime(2024, 4, 5), '1d')
         response = tor_request(url).text.split('\n')
         ticker_id = get_ticker_id(ticker)
 
         candles = []
+        logger.info(f'start:    {response[1]}')
+        logger.info(f'end:      {response[len(response) - 1]}')
         for line in response[1:]:
             data = line.split(',')
-            candles.append(create_candle(data, ticker_id))
+            candle = create_candle(data, ticker_id)
+            candles.append(candle)
         
         return candles
         

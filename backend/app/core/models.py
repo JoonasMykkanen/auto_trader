@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 09:24:41 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/24 09:49:18 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,8 +32,8 @@ class Base(DeclarativeBase):
 class Ticker(Base):
     """ Entrty from 'tickers' table in db \n\n id: serial id \n\n name: AAPL or NVDA \n\n index: SP500 or DOW """
     __tablename__ = 'tickers'
-
     id: Mapped[int] = mapped_column(primary_key=True)
+
     name: Mapped[str] = mapped_column(String(10), nullable=False)
     index: Mapped[str] = mapped_column(String(50), nullable=False)
 
@@ -45,9 +45,9 @@ class Ticker(Base):
 class DailyCandle(Base):
     """ Entry from 'daily_candles table in db """
     __tablename__ = 'daily_candles'
-
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+    date: Mapped[datetime] = mapped_column(DateTime(timezone=True), unique=True)
     open: Mapped[Float] =  mapped_column(Float, nullable=False)
     high: Mapped[Float] = mapped_column(Float, nullable=False)
     low: Mapped[Float] = mapped_column(Float, nullable=False)

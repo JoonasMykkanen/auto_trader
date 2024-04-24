@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/20 05:56:00 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/23 07:45:23 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/24 09:29:30 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ config = Config()
 # --------------------- LOGGING ---------------------
 logger = logging.getLogger('uvicorn.error')
 logger.setLevel(logging.DEBUG)
+logger.propagate = False
 
 console_handler = logging.StreamHandler(sys.stdout)
 console_handler.setLevel(logging.DEBUG)

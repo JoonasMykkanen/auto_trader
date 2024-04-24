@@ -6,19 +6,22 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:55:49 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 08:33:28 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/24 11:10:19 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# NOTE: using session.rollback() is purely crud.py functions responsibility
+# NOTE: using session.rollback() is purely crud.py functions responsibility and will not be handled else where
 
 
 # from ..core.models import WeeklyCandle
+from sqlalchemy.exc import IntegrityError
 from ..core.models import DailyCandle
 from ..core.database import session
 from ..core.models import Ticker
 from ..core.config import logger
 from sqlalchemy import select
+from datetime import datetime
+from sqlalchemy import desc
 from typing import List
 
 
@@ -57,7 +60,8 @@ def get_ticker_id(ticker_name: str):
         return ticker.id
     except Exception as error:
         logger.exception(error)
-        session.rollback()
+        # session.rollback()
+        # TODO: figure out if needed
         
 
 
@@ -74,3 +78,18 @@ def save_candles(candles: List[DailyCandle]):
     except Exception as error:
         logger.exception(error)
         session.rollback()
+
+
+
+def get_daily_candle_latest():
+    """ retrieve the latest date from __daily_candles__ table or 1.1.1981 """
+    try:
+        candle = session.query(DailyCandle).order_by(desc(DailyCandle.date)).first()
+        if candle is not None:
+            return candle.date
+        else:
+            return datetime(1981, 1, 1)
+    except Exception as error:
+        logger.exception(error)
+        # session.rollback()
+        # TODO: figure out if needed
