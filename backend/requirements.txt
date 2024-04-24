@@ -4,3 +4,5 @@ fastapi==0.110
 requests==2.31
 uvicorn==0.29
 stem==1.8.2
+python-dotenv==1.0.1
+psycopg2-binary==2.9.9

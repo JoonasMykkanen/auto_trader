@@ -6,15 +6,23 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 09:32:22 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/21 08:34:19 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/22 11:42:37 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from starlette.middleware.cors import CORSMiddleware
+from .core.config import logger
 from fastapi import FastAPI
 
 
+# Development router
+# TODO: Remove at some point
+from .routes.dev import test_router
+
+
+
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
@@ -22,3 +30,5 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(test_router, prefix='/test')
