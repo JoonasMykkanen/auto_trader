@@ -6,12 +6,13 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 21:21:21 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 00:28:43 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import mapped_column
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import Mapped
 from sqlalchemy.sql import func
 from datetime import datetime
@@ -47,13 +48,15 @@ class DailyCandle(Base):
     __tablename__ = 'daily_candles'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    date: Mapped[datetime] = mapped_column(DateTime(timezone=True), unique=True)
+    date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     open: Mapped[Float] =  mapped_column(Float, nullable=False)
     high: Mapped[Float] = mapped_column(Float, nullable=False)
     low: Mapped[Float] = mapped_column(Float, nullable=False)
     close: Mapped[float] = mapped_column(Float, nullable=False)
     volume: Mapped[int] = mapped_column(BigInteger, nullable=False)
     ticker_id: Mapped[int] = mapped_column(Integer, ForeignKey('tickers.id'))
+
+    __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_ticker_uc'),)
 
     
 

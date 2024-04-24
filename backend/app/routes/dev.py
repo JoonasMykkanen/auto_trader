@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 23:54:04 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 00:10:59 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ def listen_data():
         tickers = read_spx_tickers()
         
         for ticker in tickers:
-            candles = fetch_daily_candles(ticker, config.DAILY)
+            candles = fetch_daily_candles(ticker)
             create_candles(candles)
             logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
         

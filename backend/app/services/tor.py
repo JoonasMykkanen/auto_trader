@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 15:45:27 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 23:57:54 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 00:07:20 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,6 @@ def tor_request( url: str ) -> requests.Response:
 			return response
 		except:
 			renew_ip()
-			logger.warning('Too many requests, renewing IP and sleepping')
+			logger.warning('Too many requests, renewing IP and sleepping for one (1) minute')
 			sleep(60)
 

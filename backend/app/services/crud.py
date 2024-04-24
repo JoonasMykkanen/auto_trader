@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:55:49 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 23:51:30 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 00:23:12 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ from ..core.database import session
 from ..core.models import Ticker
 from ..core.config import config
 from ..core.config import logger
+from datetime import timedelta
 from sqlalchemy import select
 from datetime import datetime
 from sqlalchemy import desc
@@ -101,16 +102,21 @@ def create_candles(candles: List[DailyCandle]) -> List[DailyCandle]:
 
 
 
-def read_daily_candle_latest() -> datetime:
+def read_daily_candle_latest(ticker: Ticker) -> datetime:
     """ retrieve the latest date from __daily_candles__ table or 1.1.1981 """
     try:
-        candle = session.query(DailyCandle).order_by(desc(DailyCandle.date)).first()
+        candle = session.query(DailyCandle) \
+                .filter(DailyCandle.ticker_id == ticker.id) \
+                .order_by(desc(DailyCandle.date)).first()
         if candle is not None:
-            return candle.date
+            return candle.date + timedelta(days=1)
         else:
+            logger.debug('ELSE:')
             return datetime(1981, 1, 1)
+            
     except Exception as error:
         logger.exception(error)
         # session.rollback()
         # TODO: figure out if needed
-        return None
+        logger.debug('EXCEPT')
+        return datetime(1981, 1, 1)

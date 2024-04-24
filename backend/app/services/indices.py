@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/24 15:48:35 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 21:21:14 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 00:07:56 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,10 +19,10 @@ import requests
 
 
 # NOTE: Could break at any given time if Wikipedia changes layout or HTML structure
-def fetch_spx_tickers() -> List[Ticker] | None:
+def fetch_spx_tickers() -> List[Ticker]:
     """ Uses wikipedia tables to fetch SPX tickers """
     try:
-        response = requests.get(config.SPX_URL)        
+        response = requests.get(config.SPX_URL)
         soup = BeautifulSoup(response.text, 'html.parser')
         table = soup.find('table', {'class': 'wikitable sortable'})  
         

@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:52:25 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 23:52:13 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 00:24:09 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,10 +37,10 @@ from .tor import tor_request
 
 from datetime import datetime
 from datetime import timedelta
+from typing import List
 
 
-
-def build_url(ticker: str, start_date: datetime, end_date: datetime, interval: str):
+def build_url(ticker: str, start_date: datetime, end_date: datetime, interval: str) -> str:
     """ Creates url to request data from \n\n - ticker: 'AAPL' or other valid ticker name \n\n - interval: '1d' or '1w """
     url = \
         BASE_URL + \
@@ -48,10 +48,11 @@ def build_url(ticker: str, start_date: datetime, end_date: datetime, interval: s
         f'period1={int(start_date.timestamp())}' + \
         f'&period2={int(end_date.timestamp())}' + \
         END_URL
+    logger.info(f'start: {start_date}')
     return url
 
 
-def create_candle(data: list[str], ticker_id: int):
+def create_candle(data: list[str], ticker_id: int) -> DailyCandle:
     """ Parses one line from response to a ticker object \n\n INFO:     Date,Open,High,Low,Close,Adj Close,Volume """
     return DailyCandle(
                 date = datetime.strptime(data[0], '%Y-%m-%d'),
@@ -64,10 +65,11 @@ def create_candle(data: list[str], ticker_id: int):
             )
 
 
-def fetch_daily_candles(ticker: Ticker):
+def fetch_daily_candles(ticker: Ticker) -> List[DailyCandle] | None:
     """ Gets daily candlestick data for given ticker from 1981 or latest saved in database up until datetime.now() \n\n Parameters: \n\n - ticker: 'AAPL'"""
     try:
-        start_date = read_daily_candle_latest() + timedelta(days=1)
+        start_date = read_daily_candle_latest(ticker)
+        logger.debug(f'start_date: {start_date} end_date: {datetime.now()}')
         url = build_url(ticker.name, start_date, datetime.now(), '1d')
         response = tor_request(url).text.split('\n')
 
