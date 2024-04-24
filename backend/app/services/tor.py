@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 15:45:27 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/20 06:22:21 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/24 23:57:54 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,9 @@
 # Tor is designed to be ran on a different container exposing ports 9050 and 9051
 
 from stem.control import Controller
+from ..core.config import logger
 from stem import Signal
+from time import sleep
 import requests
 import socket
 import random
@@ -32,11 +34,11 @@ agents = [
 	'Mozilla/5.0 (Linux; Android 10; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 ]
 
-def generate_agent():
+def generate_agent() -> int:
 	return agents[random.randint(0, 9)] 
 
 
-def renew_ip():
+def renew_ip() -> None:
 	""" Sends signal to local tor binary to renew ip and identity \n\n Parameters: None \n\n Returns: None"""
 	ip = socket.gethostbyname('tor')
 	with Controller.from_port(address=ip, port=9051) as controller:
@@ -44,10 +46,17 @@ def renew_ip():
 		controller.signal(Signal.NEWNYM)
 
 
-def tor_request( url: str ):
+def tor_request( url: str ) -> requests.Response:
 	""" Makes a request trough tor proxy \n\n Parameters: None \n\n Returns: (response) object"""
-	session = requests.session()
-	session.proxies = { 'http': 'socks5h://tor:9050', 'https': 'socks5h://tor:9050' }
-	headers = { 'User-Agent': f'{generate_agent()}' }
-	response = session.get(url, headers=headers)
-	return response
+	while True:
+		try:
+			session = requests.session()
+			session.proxies = { 'http': 'socks5h://tor:9050', 'https': 'socks5h://tor:9050' }
+			headers = { 'User-Agent': f'{generate_agent()}' }
+			response = session.get(url, headers=headers)
+			return response
+		except:
+			renew_ip()
+			logger.warning('Too many requests, renewing IP and sleepping')
+			sleep(60)
+

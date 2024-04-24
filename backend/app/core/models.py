@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 09:49:18 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/24 21:21:21 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ class Ticker(Base):
     __tablename__ = 'tickers'
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    name: Mapped[str] = mapped_column(String(10), nullable=False)
+    name: Mapped[str] = mapped_column(String(10), unique=True)
     index: Mapped[str] = mapped_column(String(50), nullable=False)
 
     def __repr__(self) -> str:

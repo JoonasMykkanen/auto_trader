@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:52:25 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 12:01:30 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/24 23:52:13 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,8 +31,8 @@ from ..core.models import Ticker
 from ..core.database import session
 from ..core.config import logger
 
-from .crud import get_daily_candle_latest
-from .crud import get_ticker_id
+from .crud import read_daily_candle_latest
+from .crud import read_ticker_id
 from .tor import tor_request
 
 from datetime import datetime
@@ -64,23 +64,21 @@ def create_candle(data: list[str], ticker_id: int):
             )
 
 
-def fetch_daily(ticker: str, mode: int):
-    """ Gets daily candlestick data for given ticker from 1981 or latest saved in database up until datetime.now() \n\n Parameters: \n\n - ticker: 'AAPL' \n\n - mode: 1 == daily OR 2 == weekly """
+def fetch_daily_candles(ticker: Ticker):
+    """ Gets daily candlestick data for given ticker from 1981 or latest saved in database up until datetime.now() \n\n Parameters: \n\n - ticker: 'AAPL'"""
     try:
-        start_date = get_daily_candle_latest() + timedelta(days=1)
-        url = build_url(ticker, start_date, datetime.now(), '1d')
+        start_date = read_daily_candle_latest() + timedelta(days=1)
+        url = build_url(ticker.name, start_date, datetime.now(), '1d')
         response = tor_request(url).text.split('\n')
-        ticker_id = get_ticker_id(ticker)
 
         candles = []
-        logger.info(f'start:    {response[1]}')
-        logger.info(f'end:      {response[len(response) - 1]}')
         for line in response[1:]:
             data = line.split(',')
-            candle = create_candle(data, ticker_id)
+            candle = create_candle(data, ticker.id)
             candles.append(candle)
         
         return candles
         
     except Exception as error:
         logger.exception(error)
+        return None

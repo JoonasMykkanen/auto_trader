@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/20 05:56:00 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 09:29:30 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/24 20:55:14 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,10 +21,14 @@ load_dotenv()
 class Config:
     DAILY = 1
     WEEKLY = 2
+    
+    SPX_URL = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
+    SPX = 'SPX'
 
     DATABASE_PASSWORD = getenv('DATABASE_PASSWORD')
     DATABASE_USER = getenv('DATABASE_USER')
     DATABASE_URL = getenv('DATABASE_URL')
+
 
 config = Config()
 
