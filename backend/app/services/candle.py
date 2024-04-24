@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:52:25 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/24 11:51:40 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/24 12:01:30 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,7 +68,7 @@ def fetch_daily(ticker: str, mode: int):
     """ Gets daily candlestick data for given ticker from 1981 or latest saved in database up until datetime.now() \n\n Parameters: \n\n - ticker: 'AAPL' \n\n - mode: 1 == daily OR 2 == weekly """
     try:
         start_date = get_daily_candle_latest() + timedelta(days=1)
-        url = build_url(ticker, start_date, datetime(2024, 4, 5), '1d')
+        url = build_url(ticker, start_date, datetime.now(), '1d')
         response = tor_request(url).text.split('\n')
         ticker_id = get_ticker_id(ticker)
 
