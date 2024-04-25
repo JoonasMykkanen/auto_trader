@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 15:45:27 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/25 00:07:20 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 16:02:17 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,8 +55,9 @@ def tor_request( url: str ) -> requests.Response:
 			headers = { 'User-Agent': f'{generate_agent()}' }
 			response = session.get(url, headers=headers)
 			return response
-		except:
+		except Exception as error:
 			renew_ip()
+			logger.warning(error)
 			logger.warning('Too many requests, renewing IP and sleepping for one (1) minute')
 			sleep(60)
 

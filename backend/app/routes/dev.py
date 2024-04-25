@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/25 00:10:59 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 20:02:18 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,10 @@ from ..services.crud import create_candles
 from ..services.crud import create_tickers
 from ..core.config import logger
 from ..core.config import config
-import time
+
+# TODO: TESTING
+from threading import Lock
+import concurrent.futures
 
 test_router = APIRouter()
 
@@ -52,18 +55,29 @@ def listen_spx():
         return f'Internal server error'
     
 
+def ticker_worker(ticker):
+    candles = fetch_daily_candles(ticker)
+    create_candles(candles)
+    logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
+
+
 @test_router.get('/spx-data')
 def listen_data():
     try:
         tickers = read_spx_tickers()
         
+        # with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+            # url = { executor.submit(ticker_worker, ticker): ticker for ticker in tickers }
+
+        # """
         for ticker in tickers:
             candles = fetch_daily_candles(ticker)
             create_candles(candles)
             logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
-        
+        # """
         return "all tickers ok"
 
     except Exception as error:
         logger.error(error)
         return f'{error}'
+

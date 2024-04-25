@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:55:49 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/25 00:23:12 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 16:01:23 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,6 @@ def create_ticker(ticker: Ticker) -> Ticker:
     try:
         session.add(ticker)
         session.commit()
-        logger.info(f'record saved for __{ticker.name}__')
         return ticker
     except Exception as error:
         logger.exception(error)
@@ -48,7 +47,6 @@ def create_tickers(tickers: List[Ticker]) -> List[Ticker]:
         for ticker in tickers:
             session.add(ticker)
         session.commit()
-        logger.info(f'Saved {len(tickers)} records to table: tickers')
         return tickers
     except Exception as error:
         logger.exception(error)
@@ -74,7 +72,6 @@ def read_ticker_id(ticker_name: str) -> int:
         select_ticker_by_name = select(Ticker).where(Ticker.name == ticker_name)
         result = session.execute(select_ticker_by_name)
         ticker = result.scalars().first()
-        logger.info(f'ticker id({ticker.id}) succesfully fetched for __{ticker.name}__')
         return ticker.id
     except Exception as error:
         logger.exception(error)
@@ -93,7 +90,6 @@ def create_candles(candles: List[DailyCandle]) -> List[DailyCandle]:
         for candle in candles:
             session.add(candle)
         session.commit()
-        logger.info(f'Saved {len(candles)} records to table: daily_candles')
         return candles
     except Exception as error:
         logger.exception(error)
@@ -111,12 +107,10 @@ def read_daily_candle_latest(ticker: Ticker) -> datetime:
         if candle is not None:
             return candle.date + timedelta(days=1)
         else:
-            logger.debug('ELSE:')
             return datetime(1981, 1, 1)
             
     except Exception as error:
         logger.exception(error)
         # session.rollback()
         # TODO: figure out if needed
-        logger.debug('EXCEPT')
-        return datetime(1981, 1, 1)
+        # TODO: Raise some error and catch @ caller

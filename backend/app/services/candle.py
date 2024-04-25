@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:52:25 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/25 00:24:09 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 15:59:57 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,6 @@ def build_url(ticker: str, start_date: datetime, end_date: datetime, interval: s
         f'period1={int(start_date.timestamp())}' + \
         f'&period2={int(end_date.timestamp())}' + \
         END_URL
-    logger.info(f'start: {start_date}')
     return url
 
 
@@ -69,7 +68,6 @@ def fetch_daily_candles(ticker: Ticker) -> List[DailyCandle] | None:
     """ Gets daily candlestick data for given ticker from 1981 or latest saved in database up until datetime.now() \n\n Parameters: \n\n - ticker: 'AAPL'"""
     try:
         start_date = read_daily_candle_latest(ticker)
-        logger.debug(f'start_date: {start_date} end_date: {datetime.now()}')
         url = build_url(ticker.name, start_date, datetime.now(), '1d')
         response = tor_request(url).text.split('\n')
 
