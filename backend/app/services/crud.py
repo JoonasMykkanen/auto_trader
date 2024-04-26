@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:55:49 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 17:09:01 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/26 17:32:41 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -97,7 +97,7 @@ def create_candles(candles: List[DailyCandle]) -> None:
         session.rollback()
 
 
-def read_all_candles(ticker: Ticker) -> List[DailyCandle]:
+def read_all_daily_candles(ticker: Ticker) -> List[DailyCandle]:
     """ retrieve all daily candles for given ticker """
     # TODO: comment sql statement
     try:
