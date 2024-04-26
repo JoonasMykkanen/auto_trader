@@ -6,12 +6,11 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 09:32:22 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/22 11:42:37 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/26 15:53:34 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from starlette.middleware.cors import CORSMiddleware
-from .core.config import logger
 from fastapi import FastAPI
 
 

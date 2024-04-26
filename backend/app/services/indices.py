@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/24 15:48:35 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 08:41:20 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/26 15:52:56 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,6 @@ from ..core.models import Ticker
 from bs4 import NavigableString
 from bs4 import BeautifulSoup
 from typing import List
-# from
 import requests
 
 
@@ -30,32 +29,23 @@ def find_table(url: str) -> NavigableString | None:
     return table
 
 
-def parse_tickers(table: NavigableString) -> List[Ticker]:
-    """ Parses given table to retrieve ticker names """
-    tickers = []
-    for row in table.findAll('tr')[1:]:
-        name = row.findAll('td')[0].text[:-1]
-        ticker = Ticker(name=name, index=config.SPX)
-        tickers.append(ticker)
-    return tickers
-
-
 def fetch_spx_tickers() -> List[Ticker]:
     try:
         table = find_table(config.SPX_URL)
         if table is None:
             raise TypeError('Expected bs4 table, recieved None')
-        tickers = parse_tickers(table)
+        
+        tickers = []
+        for row in table.findAll('tr')[1:]:
+            name = row.findAll('td')[0].text[:-1]
+            company = row.findAll('td')[1].text[:-1]
+            ticker = Ticker(
+                name=name,
+                index=config.SPX,
+                company=company
+            )
+            tickers.append(ticker)
         return tickers
-
-    except Exception as error:
-        logger.error(error)
-        return None
-
-
-def fetch_dow_tickers() -> List[Ticker]:
-    try:
-        table = find_table(config.DJI_URL)
 
     except Exception as error:
         logger.error(error)

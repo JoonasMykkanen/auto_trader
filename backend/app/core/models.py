@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/25 13:51:40 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/26 14:10:19 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ class Ticker(Base):
 
     name: Mapped[str] = mapped_column(String(10), unique=True)
     index: Mapped[str] = mapped_column(String(50), nullable=False)
+    company: Mapped[str] = mapped_column(String(50), nullable=False)
 
     def __repr__(self) -> str:
         return f'id: {self.id!r}, name: {self.name!r}, index: {self.index!r}'
@@ -44,7 +45,7 @@ class Ticker(Base):
 
 
 class DailyCandle(Base):
-    """ Entry from 'daily_candles table in db """
+    """ Holds candle stick data within -> linked to a specific ticker """
     __tablename__ = 'daily_candles'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 

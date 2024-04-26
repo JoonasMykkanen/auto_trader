@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:55:49 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/25 20:12:18 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/26 15:28:32 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ def create_ticker(ticker: Ticker) -> Ticker:
 
 def create_tickers(tickers: List[Ticker]) -> List[Ticker]:
     """ Push list of tickers to db """
+    # TODO: comment sql statement
     try:
         for ticker in tickers:
             session.add(ticker)
@@ -55,7 +56,7 @@ def create_tickers(tickers: List[Ticker]) -> List[Ticker]:
     
 
 def read_spx_tickers() -> List[Ticker]:
-    """ Returns all spx tickers """
+    """ SELECT * FROM tickers WHERE index = 'spx'; \n\n Returns all spx tickers """
     try:
         select_spx_tickers = select(Ticker).where(Ticker.index == config.SPX)
         result = session.execute(select_spx_tickers)
@@ -63,11 +64,11 @@ def read_spx_tickers() -> List[Ticker]:
         return tickers
     except Exception as error:
         logger.exception(error)
-        return None
+
 
  
 def read_ticker_id(ticker_name: str) -> int:
-    """ SELECT name FROM tickers WHERE name = 'AAPL'; \n\n retrieves id for given ticker in db """
+    """ SELECT ticker_name FROM tickers WHERE name = 'AAPL'; \n\n retrieves id for given ticker in db """
     try:
         select_ticker_by_name = select(Ticker).where(Ticker.name == ticker_name)
         result = session.execute(select_ticker_by_name)
@@ -84,30 +85,29 @@ def read_ticker_id(ticker_name: str) -> int:
 
 
 # -------------------- CANDLE --------------------
-def create_candles(candles: List[DailyCandle]) -> List[DailyCandle]:
+def create_candles(candles: List[DailyCandle]) -> None:
     """ Push list of candles """
+    # TODO: comment sql statement
     try:
         for candle in candles:
             session.add(candle)
         session.commit()
-        return candles
     except Exception as error:
         logger.exception(error)
         session.rollback()
-        return None
-
 
 
 def read_daily_candle_latest(ticker: Ticker) -> datetime:
     """ retrieve the latest date from __daily_candles__ table or 1.1.1981 """
+    # TODO: comment sql statement
     try:
         candle = session.query(DailyCandle) \
                 .filter(DailyCandle.ticker_id == ticker.id) \
                 .order_by(desc(DailyCandle.date)).first()
-        if candle is not None:
-            return candle.date + timedelta(days=1)
-        else:
+        if candle is None:
             return datetime(1981, 1, 1)
+        else:
+            return candle.date + timedelta(days=1)
             
     except Exception as error:
         logger.exception(error)

@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:52:25 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/25 15:59:57 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/26 14:11:35 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,16 +27,12 @@ WEEKLY = 2
 
 from ..core.models import DailyCandle
 from ..core.models import Ticker
-
-from ..core.database import session
 from ..core.config import logger
 
 from .crud import read_daily_candle_latest
-from .crud import read_ticker_id
 from .tor import tor_request
 
 from datetime import datetime
-from datetime import timedelta
 from typing import List
 
 
