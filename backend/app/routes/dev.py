@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/25 20:03:44 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/26 16:31:27 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ from fastapi import APIRouter
 
 from ..services.indices import fetch_spx_tickers
 from ..services.crud import read_spx_tickers
-from ..services.candle import fetch_daily_candles
+from ..services.daily_candle import fetch_daily_candles
 from ..services.crud import create_candles
 from ..services.crud import create_tickers
 from ..core.config import logger

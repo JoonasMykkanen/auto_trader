@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 14:10:19 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/26 16:31:25 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,8 @@ from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import mapped_column
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import Mapped
-from sqlalchemy.sql import func
 from datetime import datetime
+from .config import logger
 
 from sqlalchemy import ForeignKey
 from sqlalchemy import DateTime
@@ -43,7 +43,6 @@ class Ticker(Base):
         return f'id: {self.id!r}, name: {self.name!r}, index: {self.index!r}'
         
 
-
 class DailyCandle(Base):
     """ Holds candle stick data within -> linked to a specific ticker """
     __tablename__ = 'daily_candles'
@@ -59,21 +58,24 @@ class DailyCandle(Base):
 
     __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_ticker_uc'),)
 
-    
 
-# class WeeklyCandle(Base):
-#     """ Entry from 'weekly_candles table in db """
-#     __tablename__ = 'weekly_candles'
-#     id = mapped_column(Integer, primary_key=True)
+class WeeklyCandle(Base):
+    """ Entry from 'weekly_candles table in db """
+    __tablename__ = 'weekly_candles'
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-#     volume = mapped_column(DECIMAL, nullable=False)
-#     open = mapped_column(DECIMAL, nullable=False)
-#     close = mapped_column(DECIMAL, nullable=False)
-#     high = mapped_column(DECIMAL, nullable=False)
-#     low = mapped_column(DECIMAL, nullable=False)
-#     date = mapped_column(Date, nullable=False)
-#     ticker_id = mapped_column(Integer, ForeignKey('tickers.id'))
+    date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    open: Mapped[Float] =  mapped_column(Float, nullable=False)
+    high: Mapped[Float] = mapped_column(Float, nullable=False)
+    low: Mapped[Float] = mapped_column(Float, nullable=False)
+    close: Mapped[float] = mapped_column(Float, nullable=False)
+    volume: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    ticker_id: Mapped[int] = mapped_column(Integer, ForeignKey('tickers.id'))
+
+    __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_ticker_uc'),)
 
 
+# TODO: remove
+logger.debug(f'models loaded')
 
 Base.metadata.create_all(bind=engine)

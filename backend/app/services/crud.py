@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:55:49 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 15:28:32 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/26 17:09:01 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -97,6 +97,32 @@ def create_candles(candles: List[DailyCandle]) -> None:
         session.rollback()
 
 
+def read_all_candles(ticker: Ticker) -> List[DailyCandle]:
+    """ retrieve all daily candles for given ticker """
+    # TODO: comment sql statement
+    try:
+        # select_candles = select(DailyCandle).where(DailyCandle.ticker_id == ticker.id)
+        # result = session.execute(select_candles)
+        # candles = result.scalars().all()
+        # return candles
+
+        candles = session.query(DailyCandle) \
+                .filter(DailyCandle.ticker_id == ticker.id) \
+                .order_by(desc(DailyCandle.date)).all()
+        
+        if candles is None:
+            return None
+        else:
+            return candles
+    
+    except Exception as error:
+        logger.exception(error)
+        # session.rollback()
+        # TODO: figure out if needed
+        # TODO: Raise some error and catch @ caller
+
+
+
 def read_daily_candle_latest(ticker: Ticker) -> datetime:
     """ retrieve the latest date from __daily_candles__ table or 1.1.1981 """
     # TODO: comment sql statement
@@ -114,3 +140,4 @@ def read_daily_candle_latest(ticker: Ticker) -> datetime:
         # session.rollback()
         # TODO: figure out if needed
         # TODO: Raise some error and catch @ caller
+
