@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/25 20:02:18 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/25 20:03:44 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,8 @@ from ..core.config import logger
 from ..core.config import config
 
 # TODO: TESTING
-from threading import Lock
-import concurrent.futures
+# from threading import Lock
+# import concurrent.futures
 
 test_router = APIRouter()
 
