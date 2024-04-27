@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 16:31:25 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 08:29:59 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ class Ticker(Base):
         return f'id: {self.id!r}, name: {self.name!r}, index: {self.index!r}'
         
 
+
 class DailyCandle(Base):
     """ Holds candle stick data within -> linked to a specific ticker """
     __tablename__ = 'daily_candles'
@@ -59,6 +60,7 @@ class DailyCandle(Base):
     __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_ticker_uc'),)
 
 
+
 class WeeklyCandle(Base):
     """ Entry from 'weekly_candles table in db """
     __tablename__ = 'weekly_candles'
@@ -73,6 +75,23 @@ class WeeklyCandle(Base):
     ticker_id: Mapped[int] = mapped_column(Integer, ForeignKey('tickers.id'))
 
     __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_ticker_uc'),)
+
+
+
+# class User(Base):
+#     __tablename__ = 'users'
+#     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+
+#     # Personal info
+#     firstname: Mapped[str] = mapped_column(String(50), nullable=False)
+#     lastname: Mapped[str] = mapped_column(String(50), nullable=False)
+#     email: Mapped[str] = mapped_column(String(50), unique=True)
+#     phone: Mapped[str] = mapped_column(String())
+
+
+
+
+
 
 
 # TODO: remove

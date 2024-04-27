@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/24 15:48:35 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 15:52:56 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 07:13:03 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ def find_table(url: str) -> NavigableString | None:
 def fetch_spx_tickers() -> List[Ticker]:
     try:
         table = find_table(config.SPX_URL)
-        if table is None:
+        if table == None:
             raise TypeError('Expected bs4 table, recieved None')
         
         tickers = []

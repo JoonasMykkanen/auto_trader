@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:55:49 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 17:32:41 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 08:23:43 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@
 
 # from ..core.models import WeeklyCandle
 from sqlalchemy.exc import IntegrityError
+from ..core.models import WeeklyCandle
 from ..core.models import DailyCandle
 from ..core.database import session
 from ..core.models import Ticker
@@ -38,7 +39,7 @@ def create_ticker(ticker: Ticker) -> Ticker:
     except Exception as error:
         logger.exception(error)
         session.rollback()
-        return None
+        raise RuntimeError('Could not finish executing query')
 
 
 def create_tickers(tickers: List[Ticker]) -> List[Ticker]:
@@ -52,7 +53,7 @@ def create_tickers(tickers: List[Ticker]) -> List[Ticker]:
     except Exception as error:
         logger.exception(error)
         session.rollback()
-        return None
+        raise RuntimeError('Could not finish executing query')
     
 
 def read_spx_tickers() -> List[Ticker]:
@@ -64,6 +65,7 @@ def read_spx_tickers() -> List[Ticker]:
         return tickers
     except Exception as error:
         logger.exception(error)
+        return None
 
 
  
@@ -76,16 +78,14 @@ def read_ticker_id(ticker_name: str) -> int:
         return ticker.id
     except Exception as error:
         logger.exception(error)
-        # session.rollback()
-        # TODO: figure out if needed
-        return None
+        raise RuntimeError('Could not finish executing query')
         
 
 
 
 
 # -------------------- CANDLE --------------------
-def create_candles(candles: List[DailyCandle]) -> None:
+def create_daily_candles(candles: List[DailyCandle] | List[WeeklyCandle]) -> None:
     """ Push list of candles """
     # TODO: comment sql statement
     try:
@@ -95,31 +95,25 @@ def create_candles(candles: List[DailyCandle]) -> None:
     except Exception as error:
         logger.exception(error)
         session.rollback()
+        raise RuntimeError('Could not finish executing query')
 
 
 def read_all_daily_candles(ticker: Ticker) -> List[DailyCandle]:
     """ retrieve all daily candles for given ticker """
     # TODO: comment sql statement
     try:
-        # select_candles = select(DailyCandle).where(DailyCandle.ticker_id == ticker.id)
-        # result = session.execute(select_candles)
-        # candles = result.scalars().all()
-        # return candles
-
         candles = session.query(DailyCandle) \
                 .filter(DailyCandle.ticker_id == ticker.id) \
                 .order_by(desc(DailyCandle.date)).all()
         
-        if candles is None:
+        if candles == None:
             return None
         else:
             return candles
     
     except Exception as error:
         logger.exception(error)
-        # session.rollback()
-        # TODO: figure out if needed
-        # TODO: Raise some error and catch @ caller
+        raise RuntimeError('Could not finish executing query')
 
 
 
@@ -130,14 +124,12 @@ def read_daily_candle_latest(ticker: Ticker) -> datetime:
         candle = session.query(DailyCandle) \
                 .filter(DailyCandle.ticker_id == ticker.id) \
                 .order_by(desc(DailyCandle.date)).first()
-        if candle is None:
+        if candle == None:
             return datetime(1981, 1, 1)
         else:
             return candle.date + timedelta(days=1)
             
     except Exception as error:
         logger.exception(error)
-        # session.rollback()
-        # TODO: figure out if needed
-        # TODO: Raise some error and catch @ caller
+        raise RuntimeError('Could not finish executing query')
 
