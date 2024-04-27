@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 16:31:27 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 12:21:40 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,10 +14,11 @@
 
 from fastapi import APIRouter
 
+from ..core.database import db_dependency
 from ..services.indices import fetch_spx_tickers
 from ..services.crud import read_spx_tickers
 from ..services.daily_candle import fetch_daily_candles
-from ..services.crud import create_candles
+from ..services.crud import create_daily_candles
 from ..services.crud import create_tickers
 from ..core.config import logger
 from ..core.config import config
@@ -43,22 +44,17 @@ test_router = APIRouter()
 
 
 @test_router.get('/spx')
-def listen_spx():
+def listen_spx(db: db_dependency):
     try:
         logger.info('/test/spx called')
         data = fetch_spx_tickers()
-        create_tickers(data)
+        create_tickers(data, db)
         logger.info(f'saved {len(data)} tickers to database')
         return f'saved {len(data)} tickers to database'
 
     except Exception as error:
-        return f'Internal server error'
+        return f'{error}'
     
-
-def ticker_worker(ticker):
-    candles = fetch_daily_candles(ticker)
-    create_candles(candles)
-    logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
 
 
 @test_router.get('/spx-data')
@@ -72,7 +68,7 @@ def listen_data():
         # """
         for ticker in tickers:
             candles = fetch_daily_candles(ticker)
-            create_candles(candles)
+            create_daily_candles(candles)
             logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
         # """
         return "all tickers ok"

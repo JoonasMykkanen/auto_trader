@@ -6,11 +6,13 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 09:32:22 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 15:53:34 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 12:10:43 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from starlette.middleware.cors import CORSMiddleware
+from .core.database import engine
+from .core.models import Base
 from fastapi import FastAPI
 
 
@@ -18,7 +20,7 @@ from fastapi import FastAPI
 # TODO: Remove at some point
 from .routes.dev import test_router
 
-
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

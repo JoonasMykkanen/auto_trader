@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/26 16:24:46 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 08:30:40 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 10:28:08 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,6 @@ from ..core.models import DailyCandle
 from ..core.config import logger
 from ..core.models import Ticker
 from datetime import timedelta
-from datetime import datetime
 from typing import List
 from math import inf
 

@@ -6,11 +6,13 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 08:53:06 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 12:11:05 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # TODO: Make all String(N) fields as small as possible to save disk space (before going live ofc -> not for MVP)
+
+
 
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import mapped_column
@@ -25,7 +27,7 @@ from sqlalchemy import Float
 from sqlalchemy import BigInteger
 from sqlalchemy import Integer
 from sqlalchemy import String
-from .database import engine
+
 
 
 class Base(DeclarativeBase):
@@ -59,7 +61,7 @@ class DailyCandle(Base):
     volume: Mapped[int] = mapped_column(BigInteger, nullable=False)
     ticker_id: Mapped[int] = mapped_column(Integer, ForeignKey('tickers.id'))
 
-    __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_ticker_uc'),)
+    __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_daily_uc'),)
 
 
 
@@ -76,7 +78,7 @@ class WeeklyCandle(Base):
     volume: Mapped[int] = mapped_column(BigInteger, nullable=False)
     ticker_id: Mapped[int] = mapped_column(Integer, ForeignKey('tickers.id'))
 
-    __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_ticker_uc'),)
+    __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_weekly_uc'),)
 
 
 
@@ -94,15 +96,3 @@ class User(Base):
     # username
     # password_hash
 
-
-
-
-
-
-
-
-
-# TODO: remove
-logger.debug(f'models loaded')
-
-Base.metadata.create_all(bind=engine)
