@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 08:19:40 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 12:21:31 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 12:42:24 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,14 +26,11 @@ SessionLocal = sessionmaker(bind=engine)
 
 
 def get_db():
-    """ yields local session object and closes connection when done """
+    """ yields local session object and closes connection when done \n\n (directly from fastapi documentation)"""
     db = SessionLocal()
     try:
-        logger.debug('local session created')
         yield db
     finally:
-        logger.debug('local session closed')
         db.close()
 
-logger.debug('database file loaded --> SessionLocal created // create_engine() ran')
 db_dependency = Annotated[Session, Depends(get_db)]
