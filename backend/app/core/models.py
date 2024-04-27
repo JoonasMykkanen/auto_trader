@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 12:11:05 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 15:19:51 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -87,12 +87,27 @@ class User(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
     # Personal info
-    firstname: Mapped[str] = mapped_column(String(50), nullable=False)
-    lastname: Mapped[str] = mapped_column(String(50), nullable=False)
+    firstname: Mapped[str] = mapped_column(String(20), nullable=False)
+    lastname: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(50), unique=True)
     phone: Mapped[str] = mapped_column(String(15), unique=True)
 
     # User info
-    # username
+    username: Mapped[str] = mapped_column(String())
     # password_hash
 
+
+
+
+
+
+
+# class Wallet(Base):
+#     __tablename__ = 'wallets'
+#     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+#     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
+
+# class Post(Base):
+#     __tablename__ = 'posts'
+#     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+#     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))

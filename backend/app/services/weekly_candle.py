@@ -6,11 +6,12 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/26 16:24:46 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 10:28:08 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 14:03:29 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from ..services.crud import read_all_daily_candles
+from ..core.database import db_dependency
 from ..core.models import WeeklyCandle
 from ..core.models import DailyCandle
 from ..core.config import logger
@@ -47,10 +48,10 @@ def create_weekly_candle(dailies: List[DailyCandle]) -> WeeklyCandle:
     return new_candle
         
 
-def fetch_weekly_candles(ticker: Ticker) -> List[WeeklyCandle]:
+def fetch_weekly_candles(ticker: Ticker, db: db_dependency) -> List[WeeklyCandle]:
     """ Iterates over the list of dailies and creates weekly candle from daily values """
     try:
-        daily_candles = read_all_daily_candles(ticker)
+        daily_candles = read_all_daily_candles(ticker, db)
 
         index = 0
         weeklies = []
