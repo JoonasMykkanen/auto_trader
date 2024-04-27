@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 12:21:40 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 13:39:23 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,17 +58,17 @@ def listen_spx(db: db_dependency):
 
 
 @test_router.get('/spx-data')
-def listen_data():
+def listen_data(db: db_dependency):
     try:
-        tickers = read_spx_tickers()
+        tickers = read_spx_tickers(db)
         
         # with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
             # url = { executor.submit(ticker_worker, ticker): ticker for ticker in tickers }
 
         # """
         for ticker in tickers:
-            candles = fetch_daily_candles(ticker)
-            create_daily_candles(candles)
+            candles = fetch_daily_candles(ticker, db)
+            create_daily_candles(candles, db)
             logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
         # """
         return "all tickers ok"

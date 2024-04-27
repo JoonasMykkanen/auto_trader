@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 08:19:40 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 12:42:24 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 13:44:20 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ from .config import logger
 
 
 engine = create_engine(config.DATABASE_URL)
+
 SessionLocal = sessionmaker(bind=engine)
 
 

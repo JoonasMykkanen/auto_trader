@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    candle.py                                          :+:      :+:    :+:    #
+#    daily_candle.py                                    :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:52:25 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 14:11:35 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 13:39:58 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ DAILY = 1
 WEEKLY = 2
 
 
+from ..core.database import db_dependency
 from ..core.models import DailyCandle
 from ..core.models import Ticker
 from ..core.config import logger
@@ -60,10 +61,10 @@ def create_candle(data: list[str], ticker_id: int) -> DailyCandle:
             )
 
 
-def fetch_daily_candles(ticker: Ticker) -> List[DailyCandle] | None:
+def fetch_daily_candles(ticker: Ticker, db: db_dependency) -> List[DailyCandle] | None:
     """ Gets daily candlestick data for given ticker from 1981 or latest saved in database up until datetime.now() \n\n Parameters: \n\n - ticker: 'AAPL'"""
     try:
-        start_date = read_daily_candle_latest(ticker)
+        start_date = read_daily_candle_latest(ticker, db)
         url = build_url(ticker.name, start_date, datetime.now(), '1d')
         response = tor_request(url).text.split('\n')
 

@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:55:49 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 13:26:18 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 13:38:48 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,14 +70,14 @@ def create_daily_candles(candles: List[DailyCandle] | List[WeeklyCandle], db: db
 # ------------------------------ READ ------------------------------ #
 def read_spx_tickers(db: db_dependency) -> List[Ticker]:
     """ SELECT * FROM tickers WHERE index = 'spx'; \n\n Returns all spx tickers """
-    statement = select(Ticker).where(Ticker.name == config.SPX)
-    tickers = db.scalars().all()
+    statement = select(Ticker).filter_by(index=config.SPX)
+    tickers = db.scalars(statement).all()
     return tickers
 
 
 def read_ticker_id(ticker_name: str, db: db_dependency) -> int:
     """ SELECT ticker_name FROM tickers WHERE name = 'AAPL'; \n\n retrieves id for given ticker in db """
-    statement = select(Ticker).where(Ticker.name == ticker_name)
+    statement = select(Ticker).filter_by(name=ticker_name)
     ticker = db.scalars(statement).first()
     return ticker
 
@@ -86,7 +86,7 @@ def read_daily_candle_latest(ticker: Ticker, db: db_dependency) -> datetime:
     """ retrieve the latest date from __daily_candles__ table or 1.1.1981 """
     # TODO: comment sql statement
     statement = select(DailyCandle) \
-                .where(DailyCandle.ticker_id == ticker.id) \
+                .filter_by(ticker_id=ticker.id) \
                 .order_by(desc(DailyCandle.date))
 
     candle = db.scalars(statement).first()    
@@ -100,7 +100,7 @@ def read_all_daily_candles(ticker: Ticker, db: db_dependency) -> List[DailyCandl
     """ retrieve all daily candles for given ticker """
     # TODO: comment sql statement
     statement = select(DailyCandle) \
-                .where(DailyCandle.ticker_id == ticker.id) \
+                .where(ticker_id=ticker.id) \
                 .order_by(desc(DailyCandle.date))
 
     candles = db.scalars(statement).all()
