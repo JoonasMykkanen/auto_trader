@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/26 16:24:46 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 08:17:11 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 08:30:40 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ from datetime import datetime
 from typing import List
 from math import inf
 
+# TODO: TEST THIS MODULE
 
 def create_weekly_candle(dailies: List[DailyCandle]) -> WeeklyCandle:
     new_open = dailies[0].open
