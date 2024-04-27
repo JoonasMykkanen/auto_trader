@@ -6,9 +6,11 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 08:29:59 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/27 08:53:06 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+# TODO: Make all String(N) fields as small as possible to save disk space (before going live ofc -> not for MVP)
 
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import mapped_column
@@ -78,15 +80,21 @@ class WeeklyCandle(Base):
 
 
 
-# class User(Base):
-#     __tablename__ = 'users'
-#     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+class User(Base):
+    __tablename__ = 'users'
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-#     # Personal info
-#     firstname: Mapped[str] = mapped_column(String(50), nullable=False)
-#     lastname: Mapped[str] = mapped_column(String(50), nullable=False)
-#     email: Mapped[str] = mapped_column(String(50), unique=True)
-#     phone: Mapped[str] = mapped_column(String())
+    # Personal info
+    firstname: Mapped[str] = mapped_column(String(50), nullable=False)
+    lastname: Mapped[str] = mapped_column(String(50), nullable=False)
+    email: Mapped[str] = mapped_column(String(50), unique=True)
+    phone: Mapped[str] = mapped_column(String(15), unique=True)
+
+    # User info
+    # username
+    # password_hash
+
+
 
 
 
