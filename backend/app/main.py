@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 09:32:22 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 15:22:06 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/28 07:11:49 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,4 +34,4 @@ app.add_middleware(
 )
 
 app.include_router(test_router, prefix='/test')
-app.include_router(register_router, prefix='/register')
+app.include_router(register_router)

@@ -1,0 +1,1 @@
+# TODO: change queries to comply: https://docs.sqlalchemy.org/en/20/orm/session_basics.html#querying
