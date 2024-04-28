@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/28 09:07:21 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/28 09:30:47 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/28 12:26:17 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,3 +24,7 @@ def authenticate_user(db: db_dependency, username: str, password: str) -> User |
     if not verify_password(password, user.hash):
         return False
     return user
+
+
+
+# https://www.youtube.com/watch?v=NuyzuNBFWxQ&ab_channel=Fireship

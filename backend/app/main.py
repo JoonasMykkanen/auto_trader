@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 09:32:22 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/28 07:11:49 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/28 11:51:31 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ from starlette.middleware.cors import CORSMiddleware
 from .core.database import engine
 from .core.models import Base
 from fastapi import FastAPI
+
 from .routes.register import register_router
 
 

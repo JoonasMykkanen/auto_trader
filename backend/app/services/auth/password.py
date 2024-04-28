@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/28 06:58:04 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/28 09:06:22 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/28 12:37:19 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,6 @@ pwd_context = CryptContext(
     deprecated='auto',
     min_verify_time='1s'
 )
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 
 

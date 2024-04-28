@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/28 07:02:40 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/28 12:05:32 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -96,6 +96,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(String())
     # hash: Mapped[str] = mapped_column(String())
     # salt: Mapped[str] = mapped_column(String())
+    # 2fa_enabled: Mapped[bool] = mapped_column(bool, default=False)
 
 
 
