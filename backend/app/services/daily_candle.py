@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:52:25 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 13:39:58 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/29 16:35:13 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ from ..core.models import DailyCandle
 from ..core.models import Ticker
 from ..core.config import logger
 
-from .crud import read_daily_candle_latest
+from .crud.candles import read_daily_candle_latest
 from .tor import tor_request
 
 from datetime import datetime

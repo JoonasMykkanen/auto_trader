@@ -1,19 +1,20 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    register.py                                        :+:      :+:    :+:    #
+#    error.py                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/04/27 14:59:59 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/28 07:32:14 by jmykkane         ###   ########.fr        #
+#    Created: 2024/04/29 17:54:45 by jmykkane          #+#    #+#              #
+#    Updated: 2024/04/29 18:20:55 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-from fastapi import APIRouter
 
 
-register_router = APIRouter(
-    prefix='/register'
-)
+class WrongEmailError(Exception):
+    pass
 
+
+class WrongPasswordError(Exception):
+    pass

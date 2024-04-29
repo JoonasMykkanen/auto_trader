@@ -6,19 +6,20 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/28 07:02:40 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/29 17:34:06 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # TODO: Make all String(N) fields as small as possible to save disk space (before going live ofc -> not for MVP)
 
 
-
+from dataclasses import dataclass
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import mapped_column
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import Mapped
 from datetime import datetime
+from .config import config
 from .config import logger
 
 from sqlalchemy import ForeignKey
@@ -27,7 +28,6 @@ from sqlalchemy import Float
 from sqlalchemy import BigInteger
 from sqlalchemy import Integer
 from sqlalchemy import String
-
 
 
 class Base(DeclarativeBase):
@@ -81,21 +81,22 @@ class WeeklyCandle(Base):
     __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_weekly_uc'),)
 
 
-
+@dataclass
 class User(Base):
     __tablename__ = 'users'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
     # Personal info
     firstname: Mapped[str] = mapped_column(String(20), nullable=False)
-    lastname: Mapped[str] = mapped_column(String(20), nullable=False)
-    email: Mapped[str] = mapped_column(String(50), unique=True)
-    phone: Mapped[str] = mapped_column(String(15), unique=True)
+    surname: Mapped[str] = mapped_column(String(20), nullable=False)
+    birthday: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    # phone: Mapped[str] = mapped_column(String(15), unique=True)
 
-    # User info
-    username: Mapped[str] = mapped_column(String())
-    # hash: Mapped[str] = mapped_column(String())
-    # salt: Mapped[str] = mapped_column(String())
+    email: Mapped[str] = mapped_column(String(50), unique=True)
+    hash: Mapped[str] = mapped_column(String(60))
+
+    def __repr__(self) -> str:
+        return f'name:  {self.firstname} {self.surname} \nbirthdaty:    {self.birthday} \nemail:    {self.email}\npwd_hash: {self.hash}'
 
 
 

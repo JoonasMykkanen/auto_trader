@@ -6,11 +6,11 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/26 16:24:46 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 14:03:29 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/29 16:35:27 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-from ..services.crud import read_all_daily_candles
+from .crud.candles import read_all_daily_candles
 from ..core.database import db_dependency
 from ..core.models import WeeklyCandle
 from ..core.models import DailyCandle
