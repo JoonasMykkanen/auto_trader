@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/28 09:24:38 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/30 09:24:03 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/30 20:14:23 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,6 @@ from sqlalchemy import select
 
 
 def read_user_by_email(db: db_dependency, email: str) -> User:
-    """ retrieves user from database based on username """
     statement = select(User).filter_by(email=email)
     user = db.scalars(statement).first()
     return user

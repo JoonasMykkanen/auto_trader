@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/27 11:10:46 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/30 08:35:45 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/30 20:14:05 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,3 +33,10 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: str | None = None
+
+
+class PostContent(BaseModel):
+    title: str
+    content: str
+    author: str
+    date: date
