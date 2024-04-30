@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/30 14:20:06 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/30 20:21:10 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/30 20:43:41 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,9 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import status
 
+from ..services.social import build_new_post_obj
 from ..services.auth import authenticate_token
-from ..services.social import build_new_post
+from ..services.crud.posts import create_post
 
 from ..core.database import db_dependency
 from ..core.schema import PostContent
@@ -30,7 +31,7 @@ from typing import Annotated
 
 
 post_router = APIRouter(
-    prefix='/social'
+    prefix='/post'
 )
 
 
@@ -42,15 +43,15 @@ def listen_root(user, db):
     return "ok"
 
 
-@post_router.post('/post')
+@post_router.post('/new')
 def create_new_post(
     user: Annotated[User, Depends(authenticate_token)],
     db: db_dependency,
     data: PostContent
 ) -> JSONResponse:
     try:
-        new_post = build_new_post(data, user)
-        
+        new_post = build_new_post_obj(data, user)
+        create_post(db, new_post)
         return JSONResponse(status_code=status.HTTP_201_CREATED, content='post created succesfully')
 
     except Exception as error:

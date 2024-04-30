@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/30 14:19:51 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/30 20:37:18 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/30 20:49:59 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ def create_post(db: db_dependency, new_post: Post) -> Post:
     try:
         db.add(new_post)
         db.commit()
+        return new_post
     except:
         db.rollback()
         raise
@@ -34,6 +35,7 @@ def delete_post(db: db_dependency, to_scrap: Post) -> bool:
     try:
         db.delete(to_scrap)
         db.commit()
+        return True
     except:
         db.rollback()
         raise
