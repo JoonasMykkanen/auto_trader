@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/29 16:34:38 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/30 09:33:11 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,14 +14,12 @@
 
 from fastapi import APIRouter
 
-from ..core.database import db_dependency
-from ..services.indices import fetch_spx_tickers
-from ..services.crud.tickers import read_spx_tickers
-from ..services.daily_candle import fetch_daily_candles
-from ..services.crud.tickers import create_daily_candles
-from ..services.crud.tickers import create_tickers
 from ..core.config import logger
-from ..core.config import config
+from ..core.models import User
+from fastapi import HTTPException
+from ..services.auth import authenticate_token
+from typing import Annotated
+from fastapi import Depends
 
 # TODO: TESTING
 # from threading import Lock
@@ -29,51 +27,49 @@ from ..core.config import config
 
 test_router = APIRouter()
 
-# @test_router.get('/')
-# def listen_root():
-#     try:
-#         logger.info('/test/root called')
-#         data = fetch_daily('AAPL', config.DAILY)
-#         start_time = time.perf_counter()
-#         create_candles(data)
-#         end_time = time.perf_counter()
-#         return f'ok - {len(data)} queries saved in {end_time - start_time} seconds'
-
-#     except Exception as error:
-#         logger.exception(error)
-
-
-@test_router.get('/spx')
-def listen_spx(db: db_dependency):
+@test_router.get('/')
+def listen_root(user: Annotated[User, Depends(authenticate_token)]):
     try:
-        logger.info('/test/spx called')
-        data = fetch_spx_tickers()
-        create_tickers(data, db)
-        logger.info(f'saved {len(data)} tickers to database')
-        return f'saved {len(data)} tickers to database'
+        logger.info(f'/test/root called: {user}')
+        return "authenticated"
 
     except Exception as error:
-        return f'{error}'
+        logger.exception(f'Exception bottom found -> did not catch above: {error}')
+        raise HTTPException(status_code=500, detail='Internal server error')
+
+
+# @test_router.get('/spx')
+# def listen_spx(db: db_dependency):
+#     try:
+#         logger.info('/test/spx called')
+#         data = fetch_spx_tickers()
+#         create_tickers(data, db)
+#         logger.info(f'saved {len(data)} tickers to database')
+#         return f'saved {len(data)} tickers to database'
+
+#     except Exception as error:
+#         return f'{error}'
     
 
 
-@test_router.get('/spx-data')
-def listen_data(db: db_dependency):
-    try:
-        tickers = read_spx_tickers(db)
+# @test_router.get('/spx-data')
+# def listen_data(db: db_dependency):
+#     try:
+#         tickers = read_spx_tickers(db)
         
-        # with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-            # url = { executor.submit(ticker_worker, ticker): ticker for ticker in tickers }
+#         # with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+#             # url = { executor.submit(ticker_worker, ticker): ticker for ticker in tickers }
 
-        # """
-        for ticker in tickers:
-            candles = fetch_daily_candles(ticker, db)
-            create_daily_candles(candles, db)
-            logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
-        # """
-        return "all tickers ok"
+#         # """
+#         for ticker in tickers:
+#             candles = fetch_daily_candles(ticker, db)
+#             create_daily_candles(candles, db)
+#             logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
+#         # """
+#         return "all tickers ok"
 
-    except Exception as error:
-        logger.error(error)
-        return f'{error}'
+#     except Exception as error:
+#         logger.error(error)
+#         return f'{error}'
+
 

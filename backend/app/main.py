@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 09:32:22 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/29 18:33:53 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/30 08:44:18 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ from .routes.auth import auth_router
 
 # Development router
 # TODO: Remove at some point
-# from .routes.dev import test_router
+from .routes.dev import test_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -33,5 +33,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(test_router, prefix='/test')
+app.include_router(test_router, prefix='/test')
 app.include_router(auth_router)

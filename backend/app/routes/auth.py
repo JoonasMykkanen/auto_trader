@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/27 14:59:59 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/29 18:29:38 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/30 09:05:46 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,14 +16,18 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
 from ..core.database import db_dependency
 from ..core.schema import RegisterSchema
-from ..core.schema import LoginSchema
+from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import HTTPException
 from ..core.config import logger
 from ..core.models import User
 from fastapi import APIRouter
 from fastapi import status
 from ..core.error import *
+from fastapi import Depends
+from typing import Annotated
+from ..services.auth import get_token
 from ..services.auth import authenticate_user
+from ..core.schema import Token
 
 auth_router = APIRouter(
     prefix='/auth'
@@ -54,12 +58,14 @@ def listen_for_new_users(db: db_dependency, data: RegisterSchema):
         raise HTTPException(status_code=500, detail='Internal server error')
 
 
-# TODO: add token logic to the response
+
 @auth_router.post('/login')
-def handle_login(db: db_dependency, data: LoginSchema):
+def handle_login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency) -> JSONResponse:
     try:
-        user = authenticate_user(db, data.email, data.password)
-        return JSONResponse(status_code=200, content='login succesfull')
+        user = authenticate_user(db, form_data.username, form_data.password)
+        access_token = get_token(form_data.username)
+        content = Token(access_token=access_token, token_type='bearer').dict()
+        return JSONResponse(status_code=200, content=content)
 
     except WrongEmailError as error:
         return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content=str(error))
@@ -68,5 +74,6 @@ def handle_login(db: db_dependency, data: LoginSchema):
         return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content=str(error))
 
     except Exception as error:
-        logger.critical(f'Exception bottom found -> did not catch above: {error}')
+        logger.exception(f'Exception bottom found -> did not catch above: {error}')
         raise HTTPException(status_code=500, detail='Internal server error')
+

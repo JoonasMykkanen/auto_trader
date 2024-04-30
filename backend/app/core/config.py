@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/20 05:56:00 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/26 14:09:24 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/30 06:43:27 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ class Config:
     DATABASE_PASSWORD = getenv('DATABASE_PASSWORD')
     DATABASE_USER = getenv('DATABASE_USER')
     DATABASE_URL = getenv('DATABASE_URL')
+
+    JWT_SECRET = getenv('JWT_SECRET')
 
     SPX_URL = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
     SPX = 'SPX'

@@ -6,16 +6,14 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/27 11:10:46 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/29 18:32:28 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/04/30 08:35:45 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# TODO: create pydantic models for data validation
 from pydantic import BaseModel
 from pydantic import EmailStr
 from pydantic import Field
 from datetime import date
-
 
 
 class RegisterSchema(BaseModel):
@@ -28,6 +26,10 @@ class RegisterSchema(BaseModel):
     password: str
 
 
-class LoginSchema(BaseModel):
-    email: str = Field(EmailStr)
-    password: str
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    email: str | None = None
