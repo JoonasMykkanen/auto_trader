@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/24 15:48:35 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/27 07:13:03 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/01 07:17:28 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,5 +48,5 @@ def fetch_spx_tickers() -> List[Ticker]:
         return tickers
 
     except Exception as error:
-        logger.error(error)
+        logger.exception(error)
         return None

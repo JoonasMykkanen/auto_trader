@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/30 13:42:52 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/01 07:11:39 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ from fastapi import APIRouter
 from ..core.config import logger
 from ..core.models import User
 from fastapi import HTTPException
-from ..services.auth import authenticate_token
+from ..services.security import authenticate_token
 from typing import Annotated
 from fastapi import Depends
 

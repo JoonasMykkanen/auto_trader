@@ -6,32 +6,42 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/30 20:40:09 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/01 11:34:32 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from datetime import date as date_stamp
-from datetime import datetime
+from dataclasses import asdict
+from json import dumps
 
+from sqlalchemy.orm import MappedAsDataclass
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Mapped
 
 from sqlalchemy import UniqueConstraint
+from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
 from sqlalchemy import BigInteger
-from sqlalchemy import DateTime
-from sqlalchemy import Date
 from sqlalchemy import Integer
 from sqlalchemy import String
-from sqlalchemy import Text
 from sqlalchemy import Float
+from sqlalchemy import Text
+from sqlalchemy import Date
 
 from .config import config
 from .config import logger
 
-class Base(DeclarativeBase):
-    pass
+
+class Base(MappedAsDataclass, DeclarativeBase):
+    def to_dict(self) -> dict:
+        dict_repr = {}
+        for column in self.__table__.columns:
+            value = getattr(self, column.name)
+            if isinstance(value, date_stamp):
+                value = value.isoformat()
+            dict_repr[column.name] = value
+        return dict_repr
 
 
 
@@ -43,7 +53,7 @@ class Base(DeclarativeBase):
 class Ticker(Base):
     """ Entrty from 'tickers' table in db \n\n id: serial id \n\n name: AAPL or NVDA \n\n index: SP500 or DOW """
     __tablename__ = 'tickers'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(init=False, primary_key=True)
 
     name: Mapped[str] = mapped_column(String(10), unique=True)
     index: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -52,10 +62,11 @@ class Ticker(Base):
     def __repr__(self) -> str:
         return f'id: {self.id!r}, name: {self.name!r}, index: {self.index!r}'
         
+
 class DailyCandle(Base):
     """ Holds candle stick data within -> linked to a specific ticker """
     __tablename__ = 'daily_candles'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
 
     date: Mapped[date_stamp] = mapped_column(Date)
     open: Mapped[Float] =  mapped_column(Float, nullable=False)
@@ -67,10 +78,11 @@ class DailyCandle(Base):
 
     __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_daily_uc'),)
 
+
 class WeeklyCandle(Base):
     """ Entry from 'weekly_candles table in db """
     __tablename__ = 'weekly_candles'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
 
     date: Mapped[date_stamp] = mapped_column(Date)
     open: Mapped[Float] =  mapped_column(Float, nullable=False)
@@ -93,7 +105,7 @@ class WeeklyCandle(Base):
 ############################################################################
 class User(Base):
     __tablename__ = 'users'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
 
     # Personal info
     firstname: Mapped[str] = mapped_column(String(20), nullable=False)
@@ -120,7 +132,7 @@ class User(Base):
 ############################################################################
 class Post(Base):
     __tablename__ = 'posts'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
 
     title: Mapped[str] = mapped_column(String(50), unique=True)
@@ -128,27 +140,32 @@ class Post(Base):
     date: Mapped[date_stamp] = mapped_column(Date)
     author: Mapped[str] = mapped_column(String(50))
 
-class Votes(Base):
+    # NOTE: Below will not be mapped to database
+    vote_count = None
+
+
+class Vote(Base):
     __tablename__ = 'votes'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
     post_id: Mapped[int] = mapped_column(Integer, ForeignKey('posts.id'))
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
 
-    up_votes: Mapped[int] = mapped_column(BigInteger, default=0)
-    down_votes: Mapped[int] = mapped_column(BigInteger, default=0)
+    vote_type: Mapped[int] = mapped_column(Integer, CheckConstraint('vote_type IN (-1, 1)'))
 
-class Comments(Base):
+
+class Comment(Base):
     __tablename__ = 'comments'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
     post_id: Mapped[int] = mapped_column(Integer, ForeignKey('posts.id'))
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
 
     content: Mapped[str] = mapped_column(Text, nullable=False)
     date: Mapped[date_stamp] = mapped_column(Date)
 
-class Replies(Base):
+
+class Reply(Base):
     __tablename__ = 'replies'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
     comment_id: Mapped[int] = mapped_column(Integer, ForeignKey('comments.id'))
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
 
