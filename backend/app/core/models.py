@@ -6,11 +6,12 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/01 11:34:32 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/03 08:14:59 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from datetime import date as date_stamp
+from datetime import datetime_stamp
 from dataclasses import asdict
 from json import dumps
 
@@ -23,6 +24,7 @@ from sqlalchemy import UniqueConstraint
 from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
 from sqlalchemy import BigInteger
+from sqlalchemy import DateTime
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Float
@@ -137,7 +139,7 @@ class Post(Base):
 
     title: Mapped[str] = mapped_column(String(50), unique=True)
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    date: Mapped[date_stamp] = mapped_column(Date)
+    date: Mapped[datetime_stamp] = mapped_column(DateTime)
     author: Mapped[str] = mapped_column(String(50))
 
     # NOTE: Below will not be mapped to database
@@ -160,7 +162,7 @@ class Comment(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
 
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    date: Mapped[date_stamp] = mapped_column(Date)
+    date: Mapped[datetime_stamp] = mapped_column(DateTime)
 
 
 class Reply(Base):
@@ -170,4 +172,4 @@ class Reply(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
 
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    date: Mapped[date_stamp] = mapped_column(Date)
+    date: Mapped[datetime_stamp] = mapped_column(DateTime)

@@ -1,34 +1,93 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    posts.py                                           :+:      :+:    :+:    #
+#    social.py                                          :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/30 14:19:51 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/03 07:17:51 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/03 08:11:17 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+# NOTE: /popular && /latest might have performance issues at bigger scales, will need to test with bigger data sets, up to a million or so
+
 from ...core.database import db_dependency
-from ...core.config import logger
-from ...core.models import User
+from ...core.schema import CommentContent
+from ...core.schema import VoteContent
+from ...core.models import Comment
 from ...core.models import Post
 from ...core.models import Vote
 
-from sqlalchemy.orm import aliased
 
+from sqlalchemy.orm import aliased
 from sqlalchemy import FromClause
 from sqlalchemy import select
-from sqlalchemy import desc
 from sqlalchemy import func
+from sqlalchemy import desc
+from sqlalchemy import asc
 
-from typing import Annotated
-from fastapi import Depends
 from typing import List
 
 subquery = select(Vote.post_id, func.sum(Vote.vote_type).label('vote_sum')).group_by(Vote.post_id).alias('vote_sums')
 VoteSums = aliased(subquery)
+
+
+def create_vote(db: db_dependency, new_vote: Vote) -> Vote:
+    try:
+        db.add(new_vote)
+        db.commit()
+        return new_vote
+    except:
+        db.rollback()
+        raise
+
+
+def delete_vote(db: db_dependency, to_scrap: Vote) -> Vote:
+    try:
+        db.delete(to_scrap)
+        db.commit()
+    except:
+        db.rollback()
+        raise
+
+
+def read_vote(db: db_dependency, to_find: VoteContent):
+    statement = select(Vote).filter_by(user_id=to_find.user_id, post_id=to_find.post_id)
+    result = db.scalars(statement).first()
+    return result
+
+
+def create_comment(db: db_dependency, new_comment: Comment) -> Comment:
+    try:
+        db.add(new_comment)
+        db.commit()
+        return new_comment
+    except:
+        db.rollback()
+        raise
+
+
+def delete_comment(db: db_dependency, to_scrap: Comment) -> bool:
+    try:
+        db.delete(to_scrap)
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        raise
+
+
+def read_comment(db: db_dependency, to_find: CommentContent) -> Comment:
+    statement = select(Comment).filter_by(user_id=to_find.user_id, post_id=to_find.post_id)
+    result = db.scalars(statement).first()
+    return result
+
+
+def read_all_post_comments(db: db_dependency, post_id: int) -> List[Comment]:
+    statement = select(Comment).filter_by(post_id=post_id).order_by(asc(Comment.date))
+    result = db.scalars(statement).all()
+    return result
 
 
 def create_post(db: db_dependency, new_post: Post) -> Post:
@@ -52,9 +111,9 @@ def delete_post(db: db_dependency, to_scrap: Post) -> bool:
 
 
 def read_post_by_id(db: db_dependency, to_read: int) -> Post:
-        statement = select(Post).filter_by(id=to_read)
-        result = db.scalars(statement).first()
-        return result
+    statement = select(Post).filter_by(id=to_read)
+    result = db.scalars(statement).first()
+    return result
 
 
 def read_all_posts_by_user(db: db_dependency, user_id: int) -> List[Post]:
@@ -78,6 +137,7 @@ def read_10_latest_posts(db: db_dependency) -> List[Post]:
         post.vote_count = vote_counts[post.id]
 
     return result
+
 
 def read_10_popular_posts(db: db_dependency) -> List[Post]:
     """ Return 10 most upvoted posts since start of current month in descending order"""

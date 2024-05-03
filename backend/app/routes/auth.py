@@ -6,32 +6,36 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/27 14:59:59 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/01 10:17:32 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/03 08:19:04 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from ..services.security import get_password_hash
+from ..services.security import authenticate_user
 from ..services.crud.users import create_user
-from fastapi.responses import JSONResponse
-from sqlalchemy.exc import IntegrityError
+from ..services.security import get_token
 from ..core.database import db_dependency
 from ..core.schema import RegisterSchema
-from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import HTTPException
 from ..core.config import logger
+from ..core.schema import Token
 from ..core.models import User
+from ..core.error import *
+
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 from fastapi import APIRouter
 from fastapi import status
-from ..core.error import *
 from fastapi import Depends
+
+from sqlalchemy.exc import IntegrityError
 from typing import Annotated
-from ..services.security import get_token
-from ..services.security import authenticate_user
-from ..core.schema import Token
+
 
 auth_router = APIRouter(
     prefix='/auth'
 )
+
 
 
 @auth_router.post('/register')
@@ -40,11 +44,11 @@ def listen_for_new_users(db: db_dependency, data: RegisterSchema):
     try:
         password_hash = get_password_hash(data.password)
         new_user = User(
-            firstname=data.firstname,
-            surname=data.surname,
-            birthday=data.birthday,
-            email=data.email,
-            hash=password_hash
+            firstname = data.firstname,
+            surnam = data.surname,
+            birthday = data.birthday,
+            email = data.email,
+            hash = password_hash
         )
         create_user(db, new_user)
         ret = new_user.to_dict()
