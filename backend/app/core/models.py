@@ -6,12 +6,12 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/03 08:14:59 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/03 08:31:22 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+from datetime import datetime as datetime_stamp
 from datetime import date as date_stamp
-from datetime import datetime_stamp
 from dataclasses import asdict
 from json import dumps
 

@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/30 14:19:51 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/03 08:11:17 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/03 08:32:30 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,10 @@
 
 from ...core.database import db_dependency
 from ...core.schema import CommentContent
+from ...core.schema import ReplyContent
 from ...core.schema import VoteContent
 from ...core.models import Comment
+from ...core.models import Reply
 from ...core.models import Post
 from ...core.models import Vote
 
@@ -33,6 +35,12 @@ subquery = select(Vote.post_id, func.sum(Vote.vote_type).label('vote_sum')).grou
 VoteSums = aliased(subquery)
 
 
+
+############################################################################
+#                                                                          #
+#                                VOTES                                     #
+#                                                                          #
+############################################################################
 def create_vote(db: db_dependency, new_vote: Vote) -> Vote:
     try:
         db.add(new_vote)
@@ -58,6 +66,14 @@ def read_vote(db: db_dependency, to_find: VoteContent):
     return result
 
 
+
+
+
+############################################################################
+#                                                                          #
+#                             COMMENTS                                     #
+#                                                                          #
+############################################################################
 def create_comment(db: db_dependency, new_comment: Comment) -> Comment:
     try:
         db.add(new_comment)
@@ -90,6 +106,54 @@ def read_all_post_comments(db: db_dependency, post_id: int) -> List[Comment]:
     return result
 
 
+
+
+
+############################################################################
+#                                                                          #
+#                              REPLIES                                     #
+#                                                                          #
+############################################################################
+def create_reply(db: db_dependency, new_reply: Reply) -> Reply:
+    try:
+        db.add(new_reply)
+        db.commit()
+        return new_reply
+    except:
+        db.rollback()
+        raise
+
+
+def delete_reply(db: db_dependency, to_scrap: ReplyContent) -> bool:
+    try:
+        db.delete(to_scrap)
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        raise
+
+
+def read_reply(db: db_dependency, to_find: ReplyContent) -> Comment:
+    statement = select(Reply).filter_by(user_id=to_find.user_id, comment_id=to_find.comment_id)
+    result = db.scalars(statement).first()
+    return result
+
+
+def read_all_comment_replies(db: db_dependency, comment_id: int) -> List[Comment]:
+    statement = select(Reply).filter_by(comment_id=comment_id).order_by(asc(Reply.date))
+    result = db.scalars(statement).all()
+    return result
+
+
+
+
+
+############################################################################
+#                                                                          #
+#                                POSTS                                     #
+#                                                                          #
+############################################################################
 def create_post(db: db_dependency, new_post: Post) -> Post:
     try:
         db.add(new_post)
