@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/28 09:15:17 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/28 09:15:36 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/08 19:00:26 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,7 @@ def read_spx_tickers(db: db_dependency) -> List[Ticker]:
     return tickers
 
 
-def read_ticker_id(ticker_name: str, db: db_dependency) -> int:
+def read_ticker(ticker_name: str, db: db_dependency) -> int:
     """ SELECT ticker_name FROM tickers WHERE name = 'AAPL'; \n\n retrieves id for given ticker in db """
     statement = select(Ticker).filter_by(name=ticker_name)
     ticker = db.scalars(statement).first()

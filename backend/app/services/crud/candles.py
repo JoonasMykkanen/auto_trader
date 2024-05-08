@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/28 09:16:00 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/28 09:18:02 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/08 19:11:09 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,10 +15,13 @@ from ...core.models import WeeklyCandle
 from ...core.models import WeeklyCandle
 from ...core.models import DailyCandle
 from ...core.models import Ticker
-from datetime import timedelta
-from datetime import datetime
+
 from sqlalchemy import select
 from sqlalchemy import desc
+
+from datetime import timedelta
+from datetime import datetime
+from datetime import date
 from typing import List
 
 
@@ -52,9 +55,18 @@ def read_all_daily_candles(ticker: Ticker, db: db_dependency) -> List[DailyCandl
     """ retrieve all daily candles for given ticker """
     # TODO: comment sql statement
     statement = select(DailyCandle) \
-                .where(ticker_id=ticker.id) \
+                .filter_by(ticker_id=ticker.id) \
                 .order_by(desc(DailyCandle.date))
 
     candles = db.scalars(statement).all()
     return candles
 
+
+def read_daily_candles_since(ticker: Ticker, since: date, db: db_dependency) -> List[DailyCandle]:
+    statement = select(DailyCandle) \
+                .filter_by(ticker_id=ticker.id) \
+                .filter(DailyCandle.date>=since) \
+                .order_by(desc(DailyCandle.date))
+    
+    candles = db.scalars(statement).all()
+    return candles

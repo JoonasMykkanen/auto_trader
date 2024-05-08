@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/29 17:54:45 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/30 09:38:06 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/08 18:43:04 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,10 @@ class WrongEmailError(Exception):
 
 
 class WrongPasswordError(Exception):
+    pass
+
+
+class NoTradeEntryError(Exception):
     pass
 
 
