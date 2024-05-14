@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/08 19:11:37 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/14 06:51:19 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ from ..services.crud.candles import *
 from ..services.indices import *
 from ..services.daily_candle import *
 from typing import Annotated
-from ..services.strategies.qullamaggie import qullamaggie
+from ..services.strategies.qullamaggie import *
 from ..core.database import db_dependency
 from fastapi import Depends
 
@@ -85,7 +85,8 @@ def listen_data(db: db_dependency):
 @test_router.get('/kulla')
 def test_strat(db: db_dependency):
     try:
-        qullamaggie('MMM', db)
+        ticker = read_ticker('MMM', db)
+        qullamaggie(ticker, db)
 
     except Exception as error:
         logger.error(error)

@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/28 09:16:00 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/08 19:11:09 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/14 06:38:43 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,6 +67,16 @@ def read_daily_candles_since(ticker: Ticker, since: date, db: db_dependency) -> 
                 .filter_by(ticker_id=ticker.id) \
                 .filter(DailyCandle.date>=since) \
                 .order_by(desc(DailyCandle.date))
+    
+    candles = db.scalars(statement).all()
+    return candles
+
+
+def read_weekly_candles_since(ticker: Ticker, since: date, db: db_dependency) -> List[WeeklyCandle]:
+    statement = select(WeeklyCandle) \
+                .filter_by(ticker_id=ticker.id) \
+                .filter(WeeklyCandle.date>=since) \
+                .order_by(desc(WeeklyCandle.date))
     
     candles = db.scalars(statement).all()
     return candles

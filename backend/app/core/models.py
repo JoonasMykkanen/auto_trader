@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/03 08:31:22 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/14 07:14:48 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import BigInteger
 from sqlalchemy import DateTime
 from sqlalchemy import Integer
+from sqlalchemy import Boolean
 from sqlalchemy import String
 from sqlalchemy import Float
 from sqlalchemy import Text
@@ -120,6 +121,9 @@ class User(Base):
     # TYPE (admin, user, superuser, etc...)
     # Register date
 
+    # Reset every month
+    voted: Mapped[bool] = mapped_column(Boolean)
+
     def __repr__(self) -> str:
         return f'name:  {self.firstname} {self.surname} \nbirthdaty:    {self.birthday} \nemail:    {self.email}\npwd_hash: {self.hash}'
 
@@ -173,3 +177,27 @@ class Reply(Base):
 
     content: Mapped[str] = mapped_column(Text, nullable=False)
     date: Mapped[datetime_stamp] = mapped_column(DateTime)
+
+
+
+
+
+############################################################################
+#                                                                          #
+#                               TRADES &                                   #
+#                                                                          #
+############################################################################
+class Trade(Base):
+    __tablename__ = 'trades'
+    id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
+    ticker_id: Mapped[int] = mapped_column(Integer, ForeignKey('tickers.id'))
+
+    status: Mapped[int] = mapped_column(Integer, nullable=False)
+    updated: Mapped[date_stamp] = mapped_column(Date, nullable=True)
+    strategy: Mapped[str] = mapped_column(String(3), nullable=False)
+
+    entry_date: Mapped[date_stamp] = mapped_column(Date, nullable=True)
+    exit_date: Mapped[date_stamp] = mapped_column(Date, nullable=True)
+    entry_price: Mapped[Float] = mapped_column(Float, nullable=True)
+    exit_price: Mapped[Float] = mapped_column(Float, nullable=True)
+    position: Mapped[int] = mapped_column(Integer, nullable=True)

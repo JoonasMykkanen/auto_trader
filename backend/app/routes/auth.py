@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/27 14:59:59 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/03 08:19:04 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/14 07:16:40 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,10 +45,11 @@ def listen_for_new_users(db: db_dependency, data: RegisterSchema):
         password_hash = get_password_hash(data.password)
         new_user = User(
             firstname = data.firstname,
-            surnam = data.surname,
+            surname = data.surname,
             birthday = data.birthday,
             email = data.email,
-            hash = password_hash
+            hash = password_hash,
+            voted = False
         )
         create_user(db, new_user)
         ret = new_user.to_dict()
