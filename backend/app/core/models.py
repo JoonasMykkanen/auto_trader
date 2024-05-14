@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/14 07:14:48 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/14 09:50:51 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,9 @@ class Base(MappedAsDataclass, DeclarativeBase):
 ############################################################################
 class Ticker(Base):
     """ Entrty from 'tickers' table in db \n\n id: serial id \n\n name: AAPL or NVDA \n\n index: SP500 or DOW """
+    def __repr__(self) -> str:
+        return f'id: {self.id!r}, name: {self.name!r}, index: {self.index!r}'
+    
     __tablename__ = 'tickers'
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
 
@@ -62,12 +65,13 @@ class Ticker(Base):
     index: Mapped[str] = mapped_column(String(50), nullable=False)
     company: Mapped[str] = mapped_column(String(50), nullable=False)
 
-    def __repr__(self) -> str:
-        return f'id: {self.id!r}, name: {self.name!r}, index: {self.index!r}'
+    
         
 
 class DailyCandle(Base):
-    """ Holds candle stick data within -> linked to a specific ticker """
+    def __repr__(self):
+        return f'{self.date} - o: {self.open} h: {self.high} l: {self.low} c: {self.close}'
+    
     __tablename__ = 'daily_candles'
     id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
 
@@ -80,6 +84,7 @@ class DailyCandle(Base):
     ticker_id: Mapped[int] = mapped_column(Integer, ForeignKey('tickers.id'))
 
     __table_args__  = (UniqueConstraint('date', 'ticker_id', name='date_daily_uc'),)
+
 
 
 class WeeklyCandle(Base):
@@ -107,6 +112,9 @@ class WeeklyCandle(Base):
 #                                                                          #
 ############################################################################
 class User(Base):
+    def __repr__(self) -> str:
+        return f'name:  {self.firstname} {self.surname} \nbirthdaty:    {self.birthday} \nemail:    {self.email}\npwd_hash: {self.hash}'
+    
     __tablename__ = 'users'
     id: Mapped[int] = mapped_column(Integer, init=False, primary_key=True)
 
@@ -124,8 +132,6 @@ class User(Base):
     # Reset every month
     voted: Mapped[bool] = mapped_column(Boolean)
 
-    def __repr__(self) -> str:
-        return f'name:  {self.firstname} {self.surname} \nbirthdaty:    {self.birthday} \nemail:    {self.email}\npwd_hash: {self.hash}'
 
 
 
@@ -193,11 +199,11 @@ class Trade(Base):
     ticker_id: Mapped[int] = mapped_column(Integer, ForeignKey('tickers.id'))
 
     status: Mapped[int] = mapped_column(Integer, nullable=False)
-    updated: Mapped[date_stamp] = mapped_column(Date, nullable=True)
+    cursor: Mapped[date_stamp] = mapped_column(Date, nullable=True)
     strategy: Mapped[str] = mapped_column(String(3), nullable=False)
 
-    entry_date: Mapped[date_stamp] = mapped_column(Date, nullable=True)
-    exit_date: Mapped[date_stamp] = mapped_column(Date, nullable=True)
-    entry_price: Mapped[Float] = mapped_column(Float, nullable=True)
-    exit_price: Mapped[Float] = mapped_column(Float, nullable=True)
-    position: Mapped[int] = mapped_column(Integer, nullable=True)
+    entry_date: Mapped[date_stamp] = mapped_column(Date, init=False, nullable=True)
+    exit_date: Mapped[date_stamp] = mapped_column(Date, init=False, nullable=True)
+    entry_price: Mapped[Float] = mapped_column(Float, init=False, nullable=True)
+    exit_price: Mapped[Float] = mapped_column(Float, init=False, nullable=True)
+    position: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
