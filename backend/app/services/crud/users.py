@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/28 09:24:38 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/14 07:25:24 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/15 06:17:50 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ def create_user(db: db_dependency, new_user: User) -> User:
         raise
 
 
-def reset_user_monthly_voted(db: db_dependency) -> bool:
+def update_user_monthly_voted(db: db_dependency) -> bool:
     try:
         statement = update(User).values(User.voted==False)
         result = db.execute(statement)

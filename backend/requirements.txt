@@ -11,3 +11,5 @@ python-jose==3.3.0
 passlib[bcrypt]==1.7.4
 bcrypt==4.0.1
 python-multipart==0.0.9
+Backtesting==0.3.3
+TA-Lib==0.4.29

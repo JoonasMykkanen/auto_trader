@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/08 18:31:30 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/14 09:50:15 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/23 06:51:33 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,14 +30,18 @@ EXIT:
 
 """
 
+
+SEARCHING = 0
 DRIVER_FOUND = 1
 CONSOLIDATION = 2
 BREAKOUT = 3
 INITIAL_SELL = 4
 TRAILING_STOP = 5
 EXITED = 6
+ABORT = 7
 
 DRIVER_MULTIPLIER = 1.1
+RANGE_PRECENTAGE = 5
 
 from ...core.database import db_dependency
 from ...core.config import logger
@@ -57,49 +61,30 @@ from typing import List
 
 
 
-def initialize_trade(ticker: Ticker, candle: DailyCandle, db: db_dependency):
+def initialize_trade(ticker: Ticker, avg_volume: int, candle: DailyCandle, db: db_dependency):
     new_trade = Trade(
         ticker_id = ticker.id,
         status = DRIVER_FOUND,
         cursor = candle.date,
         strategy = config.STRATEGY_QUL,
+        driver_avg_vol = avg_volume
     )
-    create_trade(new_trade, db)
     return new_trade
 
 
-# DRIVER_FOUND
-def detect_driver_move(ticker: Ticker, db: db_dependency) -> Trade | None:
-    since = date.today() - timedelta(weeks=12)
-    candles = read_daily_candles_since(ticker, since, db)
-    start = candles[0]
-    threshold = start.close * DRIVER_MULTIPLIER
-    for candle in candles:
-        current = candle
-        if current.close >= threshold:
-            print(f'FOUND: {current}')
-            new_trade = initialize_trade(ticker, current, db)
-            logger.debug(f'FOUND trade on {new_trade}')
-            return new_trade
-    logger.debug('no entry found in detect_driver_move')
-    return None
+def detect_driver_move(ticker: Ticker, today: date, db: db_dependency):
+    since = today - timedelta(weeks=12)
+    candles = read_weekly_candles_range(ticker, since, today, db)
+    threshold = candles[0].close * DRIVER_MULTIPLIER
+    if candles[-1].close > threshold:
+        return True
+    return False
 
 
 
-def qullamaggie(ticker: Ticker, db: db_dependency):
-    trade = read_trade(ticker.id, config.STRATEGY_QUL, db)
-    if not trade:
-        logger.debug('no trade found on db')
-        detect_driver_move(ticker, db)
-    elif trade.status == DRIVER_FOUND:
-        pass
-    elif trade.status == CONSOLIDATION:
-        pass
-    elif trade.status == BREAKOUT:
-        pass
-    elif trade.status == INITIAL_SELL:
-        pass
-    elif trade.status == TRAILING_STOP:
-        pass
-    elif trade.status == EXITED:
-        pass
+
+# BACKTESTING
+
+def backtest_qullamaggie(ticker: Ticker, db: db_dependency):
+    pass
+        

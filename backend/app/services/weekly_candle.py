@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/26 16:24:46 by jmykkane          #+#    #+#              #
-#    Updated: 2024/04/29 16:35:27 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/15 08:26:53 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ from datetime import timedelta
 from typing import List
 from math import inf
 
+from pprint import pprint
 # TODO: TEST THIS MODULE
 
 def create_weekly_candle(dailies: List[DailyCandle]) -> WeeklyCandle:
@@ -27,8 +28,8 @@ def create_weekly_candle(dailies: List[DailyCandle]) -> WeeklyCandle:
     new_high = -inf
     new_low = inf
     new_close = dailies[-1].close
-    new_date = dailies[-1].close
-    new_ticker = dailies[-1].close
+    new_date = dailies[-1].date
+    new_ticker = dailies[-1].ticker_id
     new_volume = 0
 
     for entry in dailies:
@@ -56,11 +57,12 @@ def fetch_weekly_candles(ticker: Ticker, db: db_dependency) -> List[WeeklyCandle
         index = 0
         weeklies = []
         while index < len(daily_candles):
-            start = daily_candles[index].date - start.weekday()
+            delta = daily_candles[index].date.weekday()
+            start = daily_candles[index].date - timedelta(days=delta)
             end = start + timedelta(days=6)
 
             dailies = []
-            while daily_candles[index].date <= end:
+            while index < len(daily_candles) and daily_candles[index].date < end:
                 dailies.append(daily_candles[index])
                 index += 1
 

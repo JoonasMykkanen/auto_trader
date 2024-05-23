@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/28 09:16:00 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/14 08:47:52 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/15 09:31:11 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,9 +26,8 @@ from datetime import date
 from typing import List
 
 
-def create_daily_candles(candles: List[DailyCandle] | List[WeeklyCandle], db: db_dependency) -> None:
+def create_candles(candles: List[DailyCandle] | List[WeeklyCandle], db: db_dependency) -> None:
     """ Push list of candles """
-    # TODO: comment sql statement
     try:
         for candle in candles:
             db.add(candle)
@@ -40,7 +39,6 @@ def create_daily_candles(candles: List[DailyCandle] | List[WeeklyCandle], db: db
 
 def read_daily_candle_latest(ticker: Ticker, db: db_dependency) -> datetime:
     """ retrieve the latest date from __daily_candles__ table or 1.1.1981 """
-    # TODO: comment sql statement
     statement = select(DailyCandle) \
                 .filter_by(ticker_id=ticker.id) \
                 .order_by(desc(DailyCandle.date))
@@ -53,19 +51,27 @@ def read_daily_candle_latest(ticker: Ticker, db: db_dependency) -> datetime:
 
 def read_all_daily_candles(ticker: Ticker, db: db_dependency) -> List[DailyCandle]:
     """ retrieve all daily candles for given ticker """
-    # TODO: comment sql statement
     statement = select(DailyCandle) \
                 .filter_by(ticker_id=ticker.id) \
-                .order_by(desc(DailyCandle.date))
+                .order_by(asc(DailyCandle.date))
     candles = db.scalars(statement).all()
     return candles
 
 
-def read_daily_candles_since(ticker: Ticker, since: date, db: db_dependency) -> List[DailyCandle]:
+def read_daily_candles_date(ticker: Ticker, since: date, db: db_dependency) -> List[DailyCandle]:
     statement = select(DailyCandle) \
                 .filter_by(ticker_id=ticker.id) \
-                .filter(DailyCandle.date>=since) \
+                .filter(DailyCandle.date >= since) \
                 .order_by(asc(DailyCandle.date))
+    candles = db.scalars(statement).all()
+    return candles
+
+
+def read_daily_candles_price(ticker: Ticker, since: date, db: db_dependency) -> List[DailyCandle]:
+    statement = select(DailyCandle) \
+                .filter_by(ticker_id=ticker.id) \
+                .filter(DailyCandle.date >= since) \
+                .order_by(asc(DailyCandle.close))
     candles = db.scalars(statement).all()
     return candles
 
@@ -77,3 +83,30 @@ def read_weekly_candles_since(ticker: Ticker, since: date, db: db_dependency) ->
                 .order_by(asc(WeeklyCandle.date))
     candles = db.scalars(statement).all()
     return candles
+
+
+def read_weekly_candles_range(ticker: Ticker, start: date, end: date, db: db_dependency) -> List[WeeklyCandle]:
+    statement = select(WeeklyCandle) \
+                .filter_by(ticker_id=ticker.id) \
+                .filter(WeeklyCandle.date>=start, WeeklyCandle.date<=end) \
+                .order_by(asc(WeeklyCandle.date))
+    candles = db.scalars(statement).all()
+    return candles
+
+
+def read_weekly_next(ticker: Ticker, cursor: date, db: db_dependency) -> WeeklyCandle:
+    statement = select(WeeklyCandle) \
+                .filter_by(ticker_id=ticker.id) \
+                .filter(WeeklyCandle.date > cursor) \
+                .order_by(asc(WeeklyCandle.date))
+    candle = db.scalars(statement).first()
+    return candle
+
+
+def read_daily_next(ticker: Ticker, cursor: date, db: db_dependency) -> DailyCandle:
+    statement = select(DailyCandle) \
+                .filter_by(ticker_id=ticker.id) \
+                .filter(DailyCandle.date > cursor) \
+                .order_by(asc(DailyCandle.date))
+    candle = db.scalars(statement).first()
+    return candle

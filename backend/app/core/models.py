@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 07:56:01 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/14 09:50:51 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/15 07:32:41 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -207,3 +207,7 @@ class Trade(Base):
     entry_price: Mapped[Float] = mapped_column(Float, init=False, nullable=True)
     exit_price: Mapped[Float] = mapped_column(Float, init=False, nullable=True)
     position: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
+
+    driver_avg_vol: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
+    range_high: Mapped[Float] = mapped_column(Float, init=False, nullable=True)
+    range_low: Mapped[Float] = mapped_column(Float, init=False, nullable=True)

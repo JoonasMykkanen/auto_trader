@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/14 06:51:19 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/15 08:35:33 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ from ..services.indices import *
 from ..services.daily_candle import *
 from typing import Annotated
 from ..services.strategies.qullamaggie import *
+from ..services.weekly_candle import *
 from ..core.database import db_dependency
 from fastapi import Depends
 
@@ -69,11 +70,14 @@ def listen_data(db: db_dependency):
             # url = { executor.submit(ticker_worker, ticker): ticker for ticker in tickers }
 
         # """
-        for ticker in tickers:
-            candles = fetch_daily_candles(ticker, db)
-            create_daily_candles(candles, db)
-            logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
+        # for ticker in tickers:
+        #     candles = fetch_daily_candles(ticker, db)
+        #     create_candles(candles, db)
+        #     logger.info(f'saved {len(candles)} records for ticker: {ticker.name}')
         # """
+        for ticker in tickers:
+            candles = fetch_weekly_candles(ticker, db)
+            create_candles(candles, db)
         return "all tickers ok"
 
     except Exception as error:
@@ -85,8 +89,11 @@ def listen_data(db: db_dependency):
 @test_router.get('/kulla')
 def test_strat(db: db_dependency):
     try:
-        ticker = read_ticker('MMM', db)
-        qullamaggie(ticker, db)
+        tickers = read_spx_tickers(db)
+        for ticker in tickers:
+            logger.debug(f'testing for: {ticker.name}')
+            backtest_qullamaggie(ticker, db)
+        logger.debug('\n\n\n')
 
     except Exception as error:
         logger.error(error)

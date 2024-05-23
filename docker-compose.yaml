@@ -13,6 +13,8 @@ services:
     depends_on:
       - postgres
       - tor
+    env_file:
+      - ./backend/.env
 
   # ---------- TOR PROXY ----------
   tor:
