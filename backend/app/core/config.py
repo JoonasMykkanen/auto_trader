@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/20 05:56:00 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/14 07:06:28 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/23 08:40:11 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,11 @@ load_dotenv()
 
 # NOTE: Includes all CONSTANT variables needed by the application
 class Config:
-    DATABASE_PASSWORD = getenv('DATABASE_PASSWORD')
-    DATABASE_USER = getenv('DATABASE_USER')
-    DATABASE_URL = getenv('DATABASE_URL')
+    DATABASE_DB = getenv('POSTGERS_DB')
+    DATABASE_PASSWORD = getenv('POSTGRES_USER')
+    DATABASE_USER = getenv('POSTGRES_PASSWORD')
+    DATABASE_URL = f'postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@postgres/{DATABASE_DB}'
+    print(DATABASE_URL)
 
     JWT_SECRET = getenv('JWT_SECRET')
 

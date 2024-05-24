@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/28 09:16:00 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/15 09:31:11 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/24 05:17:54 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,6 +54,15 @@ def read_all_daily_candles(ticker: Ticker, db: db_dependency) -> List[DailyCandl
     statement = select(DailyCandle) \
                 .filter_by(ticker_id=ticker.id) \
                 .order_by(asc(DailyCandle.date))
+    candles = db.scalars(statement).all()
+    return candles
+
+
+def read_all_weekly_candles(ticker: Ticker, db: db_dependency) -> List[WeeklyCandle]:
+    """ retrieve all daily candles for given ticker """
+    statement = select(WeeklyCandle) \
+                .filter_by(ticker_id=ticker.id) \
+                .order_by(asc(WeeklyCandle.date))
     candles = db.scalars(statement).all()
     return candles
 
