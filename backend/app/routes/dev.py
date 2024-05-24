@@ -6,7 +6,7 @@
 #    By: jmykkane <jmykkane@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 11:27:42 by jmykkane          #+#    #+#              #
-#    Updated: 2024/05/24 06:33:10 by jmykkane         ###   ########.fr        #
+#    Updated: 2024/05/24 13:20:49 by jmykkane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ from fastapi import Depends
 # TODO: TESTING
 # from threading import Lock
 # import concurrent.futures
+import traceback
 
 test_router = APIRouter()
 
@@ -93,10 +94,9 @@ def test_strat(db: db_dependency):
             # logger.debug(f'testing for: {ticker.name}')
         ticker = read_ticker('AAPL', db)
         data = backtest_qullamaggie(ticker, db)
-        logger.debug('\n\n\n')
         return f'{data}'
 
     except Exception as error:
-        logger.error(error)
+        logger.error(f'{error}', traceback.format_exc())
         return f'{error}'
 
